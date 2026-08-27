@@ -26,16 +26,16 @@ app.post('/generate', async (req, res) => {
             return res.status(400).json({ error: "कृपया रील का विषय (topic) दर्ज करें।" });
         }
 
-        console.log(`[Reel Request Received] Topic: ${topic}, Lang: ${language || 'Hindi'}`);
+        console.log(`Reel Request Received! Topic: ${topic}, Lang: ${language || 'Hindi'}`);
 
-        // 1. Script Generation (Mock / AI Integration ready)
-        const hook = `क्या आप जानते हैं ${topic} के बारे में यह चौंकाने वाला सच?`;
+        // 1. Script Generation
+        const hook = `अरे आप जानते हैं ${topic} के बारे में ये चौकाने वाला सच?`;
         const bodyText = `${topic} को सही तरीके से समझें तो आपका जीवन 10 गुना आसान हो सकता है। आज ही शुरुआत करें!`;
-        const callToAction = `ऐसे ही और पावरफुल टिप्स के लिए ReelMitra को फॉलो करें!`;
+        const callToAction = `ऐसे ही और शानदार टिप्स के लिए ReelMitra को फॉलो करें।`;
 
         const fullScript = `${hook} ${bodyText} ${callToAction}`;
 
-        // 2. High Quality 9:16 Video Background (Pollinations AI / Vertical Template)
+        // 2. High Quality 9:16 Video Background
         const promptEncoded = encodeURIComponent(`cinematic 9:16 vertical video shot of ${topic}, ultra realistic, 4k`);
         const sampleVideoUrl = `https://image.pollinations.ai/prompt/${promptEncoded}?width=720&height=1280&nologo=true`;
 
@@ -57,5 +57,5 @@ app.post('/generate', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${
+    console.log(`Server running on port ${PORT}`);
 });
