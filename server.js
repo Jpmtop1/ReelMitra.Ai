@@ -1,62 +1,125 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Middleware
 app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
+  origin: "*",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
 }));
-app.use(express.json());
 
-// Health Check / Root Endpoint
-app.get('/', (req, res) => {
-    res.json({ status: "success", message: "ReelMitra.Ai Backend is Running Live!" });
+app.use(express.json({ limit: "10mb" }));
+
+// ===============================
+// HEALTH CHECK
+// ===============================
+app.get("/", (req, res) => {
+  res.json({
+    status: "success",
+    message: "ReelMitra.Ai Backend is Running Live! 🚀"
+  });
 });
 
-// Main Reel Generation Endpoint
-app.post('/generate', async (req, res) => {
-    try {
-        const { topic, language, tone, voice } = req.body;
+// ===============================
+// REEL GENERATION
+// ===============================
+app.post("/generate", async (req, res) => {
+  try {
 
-        if (!topic) {
-            return res.status(400).json({ error: "कृपया रील का विषय (topic) दर्ज करें।" });
-        }
+    const {
+      prompt,
+      topic,
+      language = "Hindi",
+      voice = "hi-IN-MadhurNeural",
+      aspect_ratio = "9:16"
+    } = req.body;
 
-        console.log(`Reel Request Received! Topic: ${topic}, Lang: ${language || 'Hindi'}`);
+    // New frontend + old frontend दोनों support
+    const finalTopic = (prompt || topic || "").trim();
 
-        // 1. Script Generation
-        const hook = `अरे आप जानते हैं ${topic} के बारे में ये चौकाने वाला सच?`;
-        const bodyText = `${topic} को सही तरीके से समझें तो आपका जीवन 10 गुना आसान हो सकता है। आज ही शुरुआत करें!`;
-        const callToAction = `ऐसे ही और शानदार टिप्स के लिए ReelMitra को फॉलो करें।`;
-
-        const fullScript = `${hook} ${bodyText} ${callToAction}`;
-
-        // 2. High Quality 9:16 Video Background
-        const promptEncoded = encodeURIComponent(`cinematic 9:16 vertical video shot of ${topic}, ultra realistic, 4k`);
-        const sampleVideoUrl = `https://image.pollinations.ai/prompt/${promptEncoded}?width=720&height=1280&nologo=true`;
-
-        // 3. Send Success Response to Frontend
-        return res.json({
-            success: true,
-            title: topic,
-            script: fullScript,
-            video_url: sampleVideoUrl,
-            audio_url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-            watermark: "JP Mishra Digital",
-            message: "आपकी AI रील सफलतापूर्वक तैयार हो गई है!"
-        });
-
-    } catch (error) {
-        console.error("Error generating reel:", error);
-        return res.status(500).json({ error: "रील जनरेट करने में आंतरिक सर्वर त्रुटि हुई।" });
+    if (!finalTopic) {
+      return res.status(400).json({
+        success: false,
+        error: "कृपया रील का विषय लिखें।"
+      });
     }
+
+    console.log("🎬 Reel Request Received");
+    console.log("Topic:", finalTopic);
+    console.log("Language:", language);
+    console.log("Voice:", voice);
+    console.log("Aspect:", aspect_ratio);
+
+    // ===============================
+    // DEMO AI SCRIPT
+    // ===============================
+
+    const script = `
+नमस्कार दोस्तों! 🙏
+
+आज हम बात करेंगे — ${finalTopic}
+
+इस विषय को आसान और रोचक तरीके से समझिए।
+यह जानकारी आपके लिए बहुत उपयोगी हो सकती है।
+
+अगर आपको यह वीडियो पसंद आए,
+तो ReelMitra.Ai को Follow करें,
+Like करें और अपने दोस्तों के साथ Share करें।
+
+धन्यवाद! ❤️
+
+JP Mishra Digital
+`;
+
+    // ===============================
+    // DEMO VIDEO
+    // ===============================
+    // अभी connection test के लिए working MP4
+    // बाद में इसे वास्तविक AI Video Engine से replace करेंगे।
+
+    const video_url =
+      "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
+    return res.json({
+
+      success: true,
+
+      title: finalTopic,
+
+      script: script.trim(),
+
+      video_url: video_url,
+
+      language: language,
+
+      voice: voice,
+
+      aspect_ratio: aspect_ratio,
+
+      watermark: "JP Mishra Digital",
+
+      message: "🎉 ReelMitra.Ai ने आपकी Demo Reel तैयार कर दी!"
+    });
+
+  } catch (error) {
+
+    console.error("❌ Generate Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: "रील तैयार करते समय सर्वर में समस्या हुई।"
+    });
+  }
 });
+
+// ===============================
+// START SERVER
+// ===============================
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 ReelMitra.Ai Server running on port ${PORT}`);
 });
+
         
