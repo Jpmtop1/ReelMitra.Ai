@@ -108,7 +108,8 @@
             e.preventDefault();
 
             const prompt = document.getElementById('promptInput').value.trim();
-            if (!prompt) return;
+            if (prompt === "") return;
+
 
             // UI Updates
             submitBtn.disabled = true;
