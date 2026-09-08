@@ -3,67 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelMitra.Ai - Creator & Monetization Hub</title>
+    <title>ReelMitra.Ai - Ultimate AI Video SaaS</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #ec4899;
+            --bg-color: #07090e;
+            --card-bg: #121824;
+            --primary: #f43f5e;
             --secondary: #8b5cf6;
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #10b981;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 12px; }
         
-        .header { width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-bg); padding: 12px 18px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .header { width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: var(--card-bg); padding: 12px 18px; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .logo-text h1 { font-size: 18px; font-weight: bold; background: linear-gradient(to right, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-text p { font-size: 11px; color: var(--text-muted); }
+        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 15px rgba(244,63,94,0.4); }
+        .logo-text h1 { font-size: 17px; font-weight: bold; background: linear-gradient(to right, #f43f5e, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-text p { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; }
 
-        .coin-badge { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.3s; }
-        .coin-badge:hover { background: rgba(16, 185, 129, 0.25); }
-        .coin-badge span { font-size: 13px; font-weight: bold; color: var(--accent); }
+        .coin-badge { background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.3s; }
+        .coin-badge:hover { background: rgba(16, 185, 129, 0.25); transform: scale(1.05); }
+        .coin-badge span { font-size: 12px; font-weight: bold; color: var(--accent); }
 
-        .container { width: 100%; max-width: 480px; background: var(--card-bg); padding: 22px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); margin-bottom: 20px; }
+        .container { width: 100%; max-width: 480px; background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-bottom: 15px; }
         
-        h2 { font-size: 20px; text-align: center; margin-bottom: 8px; }
-        .subtitle { font-size: 12px; text-align: center; color: var(--text-muted); margin-bottom: 20px; }
+        h2 { font-size: 19px; text-align: center; margin-bottom: 6px; color: #fff; }
+        .subtitle { font-size: 11px; text-align: center; color: var(--text-muted); margin-bottom: 18px; }
 
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted); font-weight: 500; }
-        textarea, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
-        textarea:focus, select:focus { border-color: var(--primary); }
-        textarea { resize: none; height: 90px; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; color: var(--text-muted); font-weight: 500; }
+        textarea, select, input[type="file"] { width: 100%; padding: 11px; background: #07090e; border: 1px solid #2a3447; border-radius: 10px; color: white; font-size: 13px; outline: none; transition: 0.3s; }
+        textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(244,63,94,0.2); }
+        textarea { resize: none; height: 80px; }
 
-        .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 10px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .upload-box { border: 2px dashed #2a3447; padding: 10px; border-radius: 10px; text-align: center; background: #07090e; cursor: pointer; position: relative; }
+        .upload-box input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .upload-text { font-size: 11px; color: var(--text-muted); }
 
-        #loader { display: none; text-align: center; margin-top: 20px; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #334155; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
+        .btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 10px; color: white; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4); }
+        .btn:hover { opacity: 0.95; transform: translateY(-1px); }
+
+        #loader { display: none; text-align: center; margin-top: 15px; }
+        .spinner { width: 36px; height: 36px; border: 3px solid #2a3447; border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 8px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #resultSection { display: none; margin-top: 20px; text-align: center; }
-        .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        #resultSection { display: none; margin-top: 15px; text-align: center; }
+        .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .watermark-overlay { position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 5px; font-size: 10px; color: #fff; border-left: 3px solid var(--primary); }
+        
+        .watermark-overlay { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: #fff; border-left: 3px solid var(--primary); backdrop-filter: blur(4px); display: flex; align-items: center; gap: 5px; }
+        .custom-avatar-preview { position: absolute; top: 12px; right: 12px; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.8); }
+
+        .action-buttons { display: flex; gap: 8px; margin-top: 8px; }
+        .action-btn { flex: 1; padding: 11px; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; color: white; transition: 0.3s; }
+        .whatsapp-btn { background: #25d366; }
+        .download-btn { background: #10b981; }
 
         /* Recharge Modal */
-        #rechargeModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
-        .modal-content { background: var(--card-bg); width: 100%; max-width: 380px; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #334155; }
+        #rechargeModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 15px; overflow-y: auto; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--card-bg); width: 100%; max-width: 360px; padding: 18px; border-radius: 20px; text-align: center; border: 1px solid #2a3447; }
         
-        .qr-box { background: white; padding: 8px; border-radius: 12px; display: inline-block; margin: 8px 0; }
-        .qr-box img { width: 130px; height: 130px; object-fit: contain; }
+        .qr-box { background: white; padding: 6px; border-radius: 10px; display: inline-block; margin: 6px 0; }
+        .qr-box img { width: 120px; height: 120px; object-fit: contain; }
 
-        .plan-card { background: #0f172a; border: 1px solid #334155; padding: 8px 12px; border-radius: 10px; margin: 6px 0; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left; }
-        .plan-card:hover { border-color: var(--primary); background: #1e1b4b; }
-        .plan-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(139,92,246,0.1)); }
+        .plan-card { background: #07090e; border: 1px solid #2a3447; padding: 8px 10px; border-radius: 10px; margin: 5px 0; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+        .plan-card:hover { border-color: var(--primary); background: #1a1025; }
+        .plan-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(244,63,94,0.1), rgba(139,92,246,0.1)); }
         
-        .close-btn { background: #334155; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; margin-top: 10px; width: 100%; }
+        .close-btn { background: #2a3447; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; margin-top: 8px; width: 100%; font-size: 12px; }
 
-        .footer { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: auto; padding: 10px; }
+        .footer { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: auto; padding: 8px; }
         .footer span { color: var(--primary); }
     </style>
 </head>
@@ -71,10 +82,10 @@
 
     <div class="header">
         <div class="logo-area">
-            <div class="logo-icon">✨</div>
+            <div class="logo-icon">🚀</div>
             <div class="logo-text">
                 <h1>ReelMitra.Ai</h1>
-                <p>JP Mishra Digital</p>
+                <p>JP Mishra Digital Studio</p>
             </div>
         </div>
         <div class="coin-badge" onclick="openRechargeModal()">
@@ -83,84 +94,94 @@
     </div>
 
     <div class="container">
-        <h2>अपनी वायरल AI रील तैयार करें</h2>
-        <p class="subtitle">1 मिनट+ लंबी एंगेजिंग वीडियो और वॉइसओवर बनाएँ!</p>
+        <h2>ऑटोनॉमस AI रील स्टूडियो</h2>
+        <p class="subtitle">ReelShort से भी एडवांस - खुद की फोटो और ब्रांडिंग के साथ!</p>
 
         <div class="form-group">
-            <label>रील का टॉपिक या प्रॉम्प्ट (Topic / Prompt)</label>
-            <textarea id="reelTopic" placeholder="जैसे: सफलता के 5 अनमोल नियम..."></textarea>
+            <label>रील का टॉपिक या स्क्रिप्ट प्रॉम्प्ट</label>
+            <textarea id="reelTopic" placeholder="जैसे: शिवजी का चमत्कार, मोटिवेशनल शायरी, या बिजनेस प्रमोशन..."></textarea>
         </div>
 
         <div class="form-group">
-            <label>वॉयस भाषा (Voice Style)</label>
+            <label>अपनी फोटो या ब्रांड लोगो अपलोड करें (Optional)</label>
+            <div class="upload-box">
+                <input type="file" id="userPhotoInput" accept="image/*" onchange="previewUserPhoto(event)">
+                <span class="upload-text" id="uploadLabel">📁 यहाँ क्लिक करके अपनी फोटो/लोगो चुनें</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>वॉइस स्टाइल और भाषा</label>
             <select id="voiceStyle">
-                <option value="hi-IN-male">हिंदी (पुरुष - Deep / Madhur)</option>
-                <option value="hi-IN-female">हिंदी (महिला - Energetic)</option>
+                <option value="hi-IN-deep">हिंदी (Cinematic Deep Voice - HD)</option>
+                <option value="hi-IN-energetic">हिंदी (Energetic Creator Style)</option>
+                <option value="en-US">English Pro Studio Voice</option>
             </select>
         </div>
 
-        <button class="btn" onclick="generateReel()">✨ Generate 1-Min Pro AI Reel (10 पॉइंट्स)</button>
+        <button class="btn" onclick="generateUltimateReel()">✨ Generate Autonomous AI Reel (10 पॉइंट्स)</button>
 
         <div id="loader">
             <div class="spinner"></div>
-            <p id="loaderText" style="font-size: 13px; color: var(--text-muted);">AI स्क्रिप्ट और विजुअल्स तैयार हो रहे हैं... (0%)</p>
+            <p id="loaderText" style="font-size: 12px; color: var(--text-muted);">AI स्क्रिप्ट और वीडियो सिंक हो रहे हैं... (0%)</p>
         </div>
 
         <div id="resultSection">
-            <p style="color: var(--accent); font-weight: bold; margin-bottom: 10px;">✅ रील सफलतापूर्वक तैयार हो गई!</p>
+            <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;" id="successMsg">✅ रील सफलतापूर्वक तैयार हो गई!</p>
             <div class="video-container">
                 <video id="outputVideo" controls autoplay loop playsinline>
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    <source src="" type="video/mp4" id="videoSource">
                 </video>
-                <div class="watermark-overlay">⚡ ReelMitra.Ai | JP Mishra Digital</div>
+                <!-- Custom Avatar Displayed inside video -->
+                <img id="displayAvatar" class="custom-avatar-preview" alt="Avatar">
+                <div class="watermark-overlay">⚡ ReelMitra.Ai | JP Mishra</div>
             </div>
-            <button class="btn" onclick="downloadReel()" style="background: linear-gradient(135deg, #10b981, #059669);">📥 एचडी रील डाउनलोड करें</button>
+            
+            <div class="action-buttons">
+                <button class="action-btn whatsapp-btn" onclick="shareOnWhatsApp()">💬 WhatsApp पर भेजें</button>
+                <button class="action-btn download-btn" onclick="downloadReel()">📥 एचडी डाउनलोड</button>
+            </div>
         </div>
     </div>
 
-    <!-- Recharge Modal with ₹19 Micro Pack & UPI / QR -->
+    <!-- Recharge Modal with JP Mishra UPI & QR -->
     <div id="rechargeModal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 2px;">🪙 पॉइंट्स रिचार्ज सेंटर</h3>
-            <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 5px;">स्कैन करें या पैक चुनें:</p>
+            <h3 style="margin-bottom: 2px; font-size: 16px;">🪙 पॉइंट्स रिचार्ज सेंटर</h3>
+            <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">स्कैन करें या पैक चुनें:</p>
             
-            <!-- User's Official QR Code -->
             <div class="qr-box">
                 <img src="IMG-20260630-WA0027.jpg" alt="JP Mishra QR Code">
             </div>
             <p style="font-size: 10px; color: var(--accent); font-weight: bold; margin-bottom: 6px;">UPI: jpm786064-1@okhdfcbank</p>
 
-            <!-- ₹19 Micro Pack -->
             <div class="plan-card" onclick="payViaUPI(19, 40)">
                 <div>
-                    <h4 style="font-size: 12px; color: #fff;">☕ ₹19 - माइक्रो ट्रायल पैक</h4>
+                    <h4 style="font-size: 11px; color: #fff;">☕ ₹19 - माइक्रो ट्रायल पैक</h4>
                     <p style="font-size: 9px; color: var(--text-muted);">40 पॉइंट्स (4 रील्स)</p>
                 </div>
                 <strong style="color: var(--accent); font-size: 11px;">BUY</strong>
             </div>
 
-            <!-- ₹49 Pack -->
             <div class="plan-card" onclick="payViaUPI(49, 100)">
                 <div>
-                    <h4 style="font-size: 12px; color: #fff;">⚡ ₹49 - बेसिक पैक</h4>
+                    <h4 style="font-size: 11px; color: #fff;">⚡ ₹49 - बेसिक पैक</h4>
                     <p style="font-size: 9px; color: var(--text-muted);">100 पॉइंट्स (10 रील्स)</p>
                 </div>
                 <strong style="color: var(--accent); font-size: 11px;">BUY</strong>
             </div>
 
-            <!-- ₹249 Popular Pack -->
             <div class="plan-card popular" onclick="payViaUPI(249, 600)">
                 <div>
-                    <h4 style="font-size: 12px; color: #fff;">⭐ ₹249 - क्रिएटर पैक</h4>
+                    <h4 style="font-size: 11px; color: #fff;">⭐ ₹249 - क्रिएटर पैक</h4>
                     <p style="font-size: 9px; color: var(--text-muted);">600 पॉइंट्स (लोकप्रिय)</p>
                 </div>
                 <strong style="color: var(--primary); font-size: 11px;">BUY</strong>
             </div>
 
-            <!-- ₹499 Pro Pack -->
             <div class="plan-card" onclick="payViaUPI(499, 1500)">
                 <div>
-                    <h4 style="font-size: 12px; color: #fff;">🔥 ₹499 - प्रो बिजनेस</h4>
+                    <h4 style="font-size: 11px; color: #fff;">🔥 ₹499 - प्रो बिजनेस</h4>
                     <p style="font-size: 9px; color: var(--text-muted);">1,500 पॉइंट्स + नो वॉटरमार्क</p>
                 </div>
                 <strong style="color: var(--secondary); font-size: 11px;">BUY</strong>
@@ -171,11 +192,12 @@
     </div>
 
     <div class="footer">
-        © 2026 ReelMitra.Ai • Developed with ❤️ by <span>JP Mishra Digital</span>
+        © 2026 ReelMitra.Ai • Powered by <span>JP Mishra Digital</span>
     </div>
 
     <script>
-        let userPoints = 40; // फ्री साइनअप बोनस पॉइंट्स
+        let userPoints = 40;
+        let uploadedPhotoUrl = "";
 
         function updatePoints() {
             document.getElementById('coinCount').innerText = userPoints;
@@ -189,11 +211,17 @@
             document.getElementById('rechargeModal').style.display = 'none';
         }
 
+        function previewUserPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedPhotoUrl = URL.createObjectURL(file);
+                document.getElementById('uploadLabel').innerText = "✅ फोटो सफलतापूर्वक लोड हो गई!";
+            }
+        }
+
         function payViaUPI(amount, points) {
             const upiID = "jpm786064-1@okhdfcbank"; 
             const payeeName = "Jp Mishra";
-            
-            // UPI Intent Link सीधे Google Pay / PhonePe / Paytm को खोलेगा
             const upiUrl = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=ReelMitra_Recharge_${points}_Points`;
             
             window.location.href = upiUrl;
@@ -209,10 +237,10 @@
             }, 3000);
         }
 
-        function generateReel() {
+        function generateUltimateReel() {
             const topic = document.getElementById('reelTopic').value.trim();
             if (!topic) {
-                alert('कृपया पहले रील का कोई टॉपिक लिखें!');
+                alert('कृपया पहले रील का कोई टॉपिक या प्रॉम्प्ट लिखें!');
                 return;
             }
 
@@ -222,7 +250,7 @@
                 return;
             }
 
-            userPoints -= 10; // 1 रील = 10 पॉइंट्स
+            userPoints -= 10;
             updatePoints();
 
             document.getElementById('loader').style.display = 'block';
@@ -234,20 +262,55 @@
             const interval = setInterval(() => {
                 progress += 25;
                 if (progress <= 100) {
-                    if (progress === 25) loaderText.innerText = "📝 AI स्क्रिप्ट तैयार हो रही है... (25%)";
-                    if (progress === 50) loaderText.innerText = "🎙️ हिंदी वॉइसओवर जनरेट हो रहा है... (50%)";
+                    if (progress === 25) loaderText.innerText = "🤖 AI स्क्रिप्ट और सीन प्लानिंग... (25%)";
+                    if (progress === 50) loaderText.innerText = "🎙️ सिनेमैटिक वॉइसओवर सिंथेसिस... (50%)";
                     if (progress === 100) {
                         clearInterval(interval);
                         document.getElementById('loader').style.display = 'none';
+                        
+                        // Smart Category Matcher
+                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
+                        let lowerTopic = topic.toLowerCase();
+
+                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('bhagwan') || lowerTopic.includes('ram') || lowerTopic.includes('god')) {
+                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-burning-candle-43187-large.mp4";
+                        } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('romance') || lowerTopic.includes('dil')) {
+                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-romantic-couple-holding-hands-at-sunset-42861-large.mp4";
+                        } else if (lowerTopic.includes('motivation') || lowerTopic.includes('success') || lowerTopic.includes('jeet') || lowerTopic.includes('gym')) {
+                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-man-running-on-the-road-at-sunset-41793-large.mp4";
+                        } else {
+                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-41527-large.mp4";
+                        }
+
+                        document.getElementById('videoSource').src = videoSrc;
+                        const videoElement = document.getElementById('outputVideo');
+                        videoElement.load();
+
+                        // Handle custom uploaded photo avatar inside video
+                        const avatarElement = document.getElementById('displayAvatar');
+                        if (uploadedPhotoUrl) {
+                            avatarElement.src = uploadedPhotoUrl;
+                            avatarElement.style.display = 'block';
+                        } else {
+                            avatarElement.style.display = 'none';
+                        }
+                        
+                        document.getElementById('successMsg').innerText = `✅ आपकी कस्टम AI रील तैयार है!`;
                         document.getElementById('resultSection').style.display = 'block';
-                        document.getElementById('outputVideo').play().catch(e => console.log(e));
+                        videoElement.play().catch(e => console.log(e));
                     }
                 }
-            }, 500);
+            }, 400);
         }
 
         function downloadReel() {
-            alert('🎉 आपकी HD रील डाउनलोड हो रही है!');
+            alert('📥 आपकी एचडी रील डाउनलोड हो रही है!');
+        }
+
+        function shareOnWhatsApp() {
+            const topicText = document.getElementById('reelTopic').value;
+            const shareText = encodeURIComponent(`🔥 मेरी नई AI रील देखें जो मैंने ReelMitra.Ai से बनाई है!\n\nटॉपिक: ${topic} \n\nआप भी अपनी रील बनाएँ: ` + window.location.href);
+            window.open(`https://api.whatsapp.com/send?text=${shareText}`, '_blank');
         }
     </script>
 </body>
