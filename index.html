@@ -52,7 +52,6 @@
         #resultSection { display: none; margin-top: 15px; text-align: center; }
         .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
         
-        /* Direct Video Element */
         #outputVideo { width: 100%; height: 100%; object-fit: cover; background: #000; }
         
         .watermark-overlay { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: #fff; border-left: 3px solid var(--primary); backdrop-filter: blur(4px); display: flex; align-items: center; gap: 5px; z-index: 10; }
@@ -101,7 +100,7 @@
 
         <div class="form-group">
             <label>रील का टॉपिक या स्क्रिप्ट प्रॉम्प्ट</label>
-            <textarea id="reelTopic" placeholder="जैसे: हनुमान जी के 12 नाम, मोटिवेशनल शायरी, या बिजनेस प्रमोशन...">हनुमान जी के 12 नाम</textarea>
+            <textarea id="reelTopic" placeholder="जैसे: हनुमान जी के 12 नाम, मोटिवेशनल शायरी, या बिजनेस प्रमोशन..."></textarea>
         </div>
 
         <div class="form-group">
@@ -270,7 +269,7 @@
                         document.getElementById('loader').style.display = 'none';
                         
                         // Ultra-stable direct public MP4 links
-                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
+                        let videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4";
                         let lowerTopic = topic.toLowerCase();
 
                         if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god')) {
