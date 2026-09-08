@@ -53,8 +53,8 @@
         .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
         video { width: 100%; height: 100%; object-fit: cover; }
         
-        .watermark-overlay { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: #fff; border-left: 3px solid var(--primary); backdrop-filter: blur(4px); display: flex; align-items: center; gap: 5px; }
-        .custom-avatar-preview { position: absolute; top: 12px; right: 12px; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.8); }
+        .watermark-overlay { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: #fff; border-left: 3px solid var(--primary); backdrop-filter: blur(4px); display: flex; align-items: center; gap: 5px; z-index: 10; }
+        .custom-avatar-preview { position: absolute; top: 12px; right: 12px; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.8); z-index: 10; }
 
         .action-buttons { display: flex; gap: 8px; margin-top: 8px; }
         .action-btn { flex: 1; padding: 11px; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; color: white; transition: 0.3s; }
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="coin-badge" onclick="openRechargeModal()">
-            <span>🪙 <strong id="coinCount">40</strong> पॉइंट्स</span>
+            <span>🪙 <strong id="coinCount">100</strong> पॉइंट्स</span>
         </div>
     </div>
 
@@ -99,7 +99,7 @@
 
         <div class="form-group">
             <label>रील का टॉपिक या स्क्रिप्ट प्रॉम्प्ट</label>
-            <textarea id="reelTopic" placeholder="जैसे: शिवजी का चमत्कार, मोटिवेशनल शायरी, या बिजनेस प्रमोशन..."></textarea>
+            <textarea id="reelTopic" placeholder="जैसे: हनुमान जी के 12 नाम, मोटिवेशनल शायरी, या बिजनेस प्रमोशन..."></textarea>
         </div>
 
         <div class="form-group">
@@ -129,7 +129,7 @@
         <div id="resultSection">
             <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;" id="successMsg">✅ रील सफलतापूर्वक तैयार हो गई!</p>
             <div class="video-container">
-                <video id="outputVideo" controls autoplay loop playsinline>
+                <video id="outputVideo" controls autoplay loop playsinline muted>
                     <source src="" type="video/mp4" id="videoSource">
                 </video>
                 <!-- Custom Avatar Displayed inside video -->
@@ -196,7 +196,7 @@
     </div>
 
     <script>
-        let userPoints = 40;
+        let userPoints = 100;
         let uploadedPhotoUrl = "";
 
         function updatePoints() {
@@ -268,18 +268,18 @@
                         clearInterval(interval);
                         document.getElementById('loader').style.display = 'none';
                         
-                        // Smart Category Matcher
-                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
+                        // Reliable high-speed working video streams
+                        let videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
                         let lowerTopic = topic.toLowerCase();
 
-                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('bhagwan') || lowerTopic.includes('ram') || lowerTopic.includes('god')) {
-                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-burning-candle-43187-large.mp4";
+                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('bhagwan') || lowerTopic.includes('ram') || lowerTopic.includes('krishna') || lowerTopic.includes('god')) {
+                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
                         } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('romance') || lowerTopic.includes('dil')) {
-                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-romantic-couple-holding-hands-at-sunset-42861-large.mp4";
+                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
                         } else if (lowerTopic.includes('motivation') || lowerTopic.includes('success') || lowerTopic.includes('jeet') || lowerTopic.includes('gym')) {
-                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-man-running-on-the-road-at-sunset-41793-large.mp4";
+                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
                         } else {
-                            videoSrc = "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-41527-large.mp4";
+                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4";
                         }
 
                         document.getElementById('videoSource').src = videoSrc;
@@ -295,9 +295,13 @@
                             avatarElement.style.display = 'none';
                         }
                         
-                        document.getElementById('successMsg').innerText = `✅ आपकी कस्टम AI रील तैयार है!`;
+                        document.getElementById('successMsg').innerText = `✅ "${topic.substring(0, 15)}..." पर आधारित AI रील तैयार है!`;
                         document.getElementById('resultSection').style.display = 'block';
-                        videoElement.play().catch(e => console.log(e));
+                        
+                        // Play video safely
+                        videoElement.play().catch(e => {
+                            console.log("Auto-play prevented, user can click play", e);
+                        });
                     }
                 }
             }, 400);
@@ -309,7 +313,7 @@
 
         function shareOnWhatsApp() {
             const topicText = document.getElementById('reelTopic').value;
-            const shareText = encodeURIComponent(`🔥 मेरी नई AI रील देखें जो मैंने ReelMitra.Ai से बनाई है!\n\nटॉपिक: ${topic} \n\nआप भी अपनी रील बनाएँ: ` + window.location.href);
+            const shareText = encodeURIComponent(`🔥 मेरी नई AI रील देखें जो मैंने ReelMitra.Ai से बनाई है!\n\nटॉपिक: ${topicText}\n\nआप भी अपनी रील बनाएँ: ` + window.location.href);
             window.open(`https://api.whatsapp.com/send?text=${shareText}`, '_blank');
         }
     </script>
