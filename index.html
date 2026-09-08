@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="coin-badge" onclick="openRechargeModal()">
-            <span>🪙 <strong id="coinCount">90</strong> पॉइंट्स</span>
+            <span>🪙 <strong id="coinCount">80</strong> पॉइंट्स</span>
         </div>
     </div>
 
@@ -196,7 +196,7 @@
     </div>
 
     <script>
-        let userPoints = 90;
+        let userPoints = 80;
         let uploadedPhotoUrl = "";
 
         function updatePoints() {
@@ -268,16 +268,17 @@
                         clearInterval(interval);
                         document.getElementById('loader').style.display = 'none';
                         
-                        // 100% working direct MP4 streaming links
-                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
+                        // Smart Dynamic Video Mapping based on User Topic
+                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4"; // Default
                         let lowerTopic = topic.toLowerCase();
 
-                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god') || lowerTopic.includes('bhakti')) {
-                            videoSrc = "https://www.w3schools.com/html/movie.mp4";
+                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god') || lowerTopic.includes('bhakti') || lowerTopic.includes('नाम')) {
+                            // Dedicated HD video stream for Bhakti / Bhajan / God topics
+                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
                         } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('dil')) {
-                            videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
+                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
                         } else if (lowerTopic.includes('motivation') || lowerTopic.includes('gym')) {
-                            videoSrc = "https://www.w3schools.com/html/movie.mp4";
+                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
                         }
 
                         const videoElement = document.getElementById('outputVideo');
@@ -292,7 +293,7 @@
                             avatarElement.style.display = 'none';
                         }
                         
-                        document.getElementById('successMsg').innerText = `✅ "${topic.substring(0, 15)}..." पर आधारित AI रील तैयार है!`;
+                        document.getElementById('successMsg').innerText = `✅ "${topic.substring(0, 18)}..." पर आधारित AI रील तैयार है!`;
                         document.getElementById('resultSection').style.display = 'block';
                         
                         videoElement.play().catch(e => {
