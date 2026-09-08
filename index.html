@@ -130,7 +130,7 @@
         <div id="resultSection">
             <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;" id="successMsg">✅ रील सफलतापूर्वक तैयार हो गई!</p>
             <div class="video-container">
-                <video id="outputVideo" controls autoplay loop playsinline>
+                <video id="outputVideo" controls autoplay muted playsinline webkit-playsinline>
                     Your browser does not support the video tag.
                 </video>
                 <img id="displayAvatar" class="custom-avatar-preview" alt="Avatar">
@@ -268,12 +268,11 @@
                         clearInterval(interval);
                         document.getElementById('loader').style.display = 'none';
                         
-                        // Smart Dynamic Video Mapping based on User Topic
-                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4"; // Default
+                        // Ultra-Reliable Direct Video Stream Sources for Mobile Chrome
+                        let videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"; 
                         let lowerTopic = topic.toLowerCase();
 
                         if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god') || lowerTopic.includes('bhakti') || lowerTopic.includes('नाम')) {
-                            // Dedicated HD video stream for Bhakti / Bhajan / God topics
                             videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
                         } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('dil')) {
                             videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
@@ -297,11 +296,11 @@
                         document.getElementById('resultSection').style.display = 'block';
                         
                         videoElement.play().catch(e => {
-                            console.log("Autoplay blocked, user can press play", e);
+                            console.log("Autoplay handled", e);
                         });
                     }
                 }
-            }, 400);
+            }, 300);
         }
 
         function downloadReel() {
