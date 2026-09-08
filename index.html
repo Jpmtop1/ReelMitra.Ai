@@ -268,16 +268,16 @@
                         clearInterval(interval);
                         document.getElementById('loader').style.display = 'none';
                         
-                        // Ultra-stable direct public MP4 links
-                        let videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4";
+                        // 100% working direct MP4 streaming links
+                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
                         let lowerTopic = topic.toLowerCase();
 
-                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god')) {
-                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
+                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god') || lowerTopic.includes('bhakti')) {
+                            videoSrc = "https://www.w3schools.com/html/movie.mp4";
                         } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('dil')) {
-                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
+                            videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
                         } else if (lowerTopic.includes('motivation') || lowerTopic.includes('gym')) {
-                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
+                            videoSrc = "https://www.w3schools.com/html/movie.mp4";
                         }
 
                         const videoElement = document.getElementById('outputVideo');
