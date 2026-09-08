@@ -54,10 +54,10 @@
         #rechargeModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
         .modal-content { background: var(--card-bg); width: 100%; max-width: 380px; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #334155; }
         
-        .qr-box { background: white; padding: 10px; border-radius: 12px; display: inline-block; margin: 10px 0; }
-        .qr-box img { width: 150px; height: 150px; object-fit: contain; }
+        .qr-box { background: white; padding: 8px; border-radius: 12px; display: inline-block; margin: 8px 0; }
+        .qr-box img { width: 130px; height: 130px; object-fit: contain; }
 
-        .plan-card { background: #0f172a; border: 1px solid #334155; padding: 10px 12px; border-radius: 12px; margin: 8px 0; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+        .plan-card { background: #0f172a; border: 1px solid #334155; padding: 8px 12px; border-radius: 10px; margin: 6px 0; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left; }
         .plan-card:hover { border-color: var(--primary); background: #1e1b4b; }
         .plan-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(139,92,246,0.1)); }
         
@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="coin-badge" onclick="openRechargeModal()">
-            <span>🪙 <strong id="coinCount">20</strong> क्रेडिट्स</span>
+            <span>🪙 <strong id="coinCount">40</strong> पॉइंट्स</span>
         </div>
     </div>
 
@@ -88,7 +88,7 @@
 
         <div class="form-group">
             <label>रील का टॉपिक या प्रॉम्प्ट (Topic / Prompt)</label>
-            <textarea id="reelTopic" placeholder="जैसे: हनुमान जी के 12 नाम और उनके प्रभाव..."></textarea>
+            <textarea id="reelTopic" placeholder="जैसे: सफलता के 5 अनमोल नियम..."></textarea>
         </div>
 
         <div class="form-group">
@@ -99,7 +99,7 @@
             </select>
         </div>
 
-        <button class="btn" onclick="generateReel()">✨ Generate 1-Min Pro AI Reel (10 Credits)</button>
+        <button class="btn" onclick="generateReel()">✨ Generate 1-Min Pro AI Reel (10 पॉइंट्स)</button>
 
         <div id="loader">
             <div class="spinner"></div>
@@ -118,40 +118,52 @@
         </div>
     </div>
 
-    <!-- Recharge Modal with JP Mishra Official UPI & QR -->
+    <!-- Recharge Modal with ₹19 Micro Pack & UPI / QR -->
     <div id="rechargeModal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 2px;">🪙 JP Mishra UPI रिचार्ज</h3>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">QR स्कैन करें या पैक पर क्लिक करें:</p>
+            <h3 style="margin-bottom: 2px;">🪙 पॉइंट्स रिचार्ज सेंटर</h3>
+            <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 5px;">स्कैन करें या पैक चुनें:</p>
             
             <!-- User's Official QR Code -->
             <div class="qr-box">
                 <img src="IMG-20260630-WA0027.jpg" alt="JP Mishra QR Code">
             </div>
-            <p style="font-size: 11px; color: var(--accent); font-weight: bold; margin-bottom: 10px;">UPI ID: jpm786064-1@okhdfcbank</p>
+            <p style="font-size: 10px; color: var(--accent); font-weight: bold; margin-bottom: 6px;">UPI: jpm786064-1@okhdfcbank</p>
 
-            <div class="plan-card" onclick="payViaUPI(49, 20)">
+            <!-- ₹19 Micro Pack -->
+            <div class="plan-card" onclick="payViaUPI(19, 40)">
                 <div>
-                    <h4 style="font-size: 13px; color: #fff;">⚡ ₹49 - ट्रायल पैक</h4>
-                    <p style="font-size: 10px; color: var(--text-muted);">20 क्रेडिट्स (2 रील्स)</p>
+                    <h4 style="font-size: 12px; color: #fff;">☕ ₹19 - माइक्रो ट्रायल पैक</h4>
+                    <p style="font-size: 9px; color: var(--text-muted);">40 पॉइंट्स (4 रील्स)</p>
                 </div>
-                <strong style="color: var(--accent); font-size: 12px;">BUY</strong>
+                <strong style="color: var(--accent); font-size: 11px;">BUY</strong>
             </div>
 
-            <div class="plan-card popular" onclick="payViaUPI(249, 120)">
+            <!-- ₹49 Pack -->
+            <div class="plan-card" onclick="payViaUPI(49, 100)">
                 <div>
-                    <h4 style="font-size: 13px; color: #fff;">⭐ ₹249 - क्रिएटर पैक</h4>
-                    <p style="font-size: 10px; color: var(--text-muted);">120 क्रेडिट्स (लोकप्रिय)</p>
+                    <h4 style="font-size: 12px; color: #fff;">⚡ ₹49 - बेसिक पैक</h4>
+                    <p style="font-size: 9px; color: var(--text-muted);">100 पॉइंट्स (10 रील्स)</p>
                 </div>
-                <strong style="color: var(--primary); font-size: 12px;">BUY</strong>
+                <strong style="color: var(--accent); font-size: 11px;">BUY</strong>
             </div>
 
-            <div class="plan-card" onclick="payViaUPI(499, 300)">
+            <!-- ₹249 Popular Pack -->
+            <div class="plan-card popular" onclick="payViaUPI(249, 600)">
                 <div>
-                    <h4 style="font-size: 13px; color: #fff;">🔥 ₹499 - प्रो बिजनेस</h4>
-                    <p style="font-size: 10px; color: var(--text-muted);">300 क्रेडिट्स + नो वॉटरमार्क</p>
+                    <h4 style="font-size: 12px; color: #fff;">⭐ ₹249 - क्रिएटर पैक</h4>
+                    <p style="font-size: 9px; color: var(--text-muted);">600 पॉइंट्स (लोकप्रिय)</p>
                 </div>
-                <strong style="color: var(--secondary); font-size: 12px;">BUY</strong>
+                <strong style="color: var(--primary); font-size: 11px;">BUY</strong>
+            </div>
+
+            <!-- ₹499 Pro Pack -->
+            <div class="plan-card" onclick="payViaUPI(499, 1500)">
+                <div>
+                    <h4 style="font-size: 12px; color: #fff;">🔥 ₹499 - प्रो बिजनेस</h4>
+                    <p style="font-size: 9px; color: var(--text-muted);">1,500 पॉइंट्स + नो वॉटरमार्क</p>
+                </div>
+                <strong style="color: var(--secondary); font-size: 11px;">BUY</strong>
             </div>
 
             <button class="close-btn" onclick="closeRechargeModal()">बंद करें</button>
@@ -163,10 +175,10 @@
     </div>
 
     <script>
-        let userCredits = 20; // फ्री साइनअप बोनस
+        let userPoints = 40; // फ्री साइनअप बोनस पॉइंट्स
 
-        function updateCredits() {
-            document.getElementById('coinCount').innerText = userCredits;
+        function updatePoints() {
+            document.getElementById('coinCount').innerText = userPoints;
         }
 
         function openRechargeModal() {
@@ -177,21 +189,21 @@
             document.getElementById('rechargeModal').style.display = 'none';
         }
 
-        function payViaUPI(amount, credits) {
+        function payViaUPI(amount, points) {
             const upiID = "jpm786064-1@okhdfcbank"; 
             const payeeName = "Jp Mishra";
             
             // UPI Intent Link सीधे Google Pay / PhonePe / Paytm को खोलेगा
-            const upiUrl = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=ReelMitra_Recharge_${credits}_Credits`;
+            const upiUrl = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=ReelMitra_Recharge_${points}_Points`;
             
             window.location.href = upiUrl;
 
             setTimeout(() => {
-                let confirmPay = confirm(`क्या आपने ₹${amount} का भुगतान सफलतापूर्वक कर दिया है?\n\n'OK' दबाते ही आपके खाते में ${credits} क्रेडिट्स जोड़ दिए जाएंगे!`);
+                let confirmPay = confirm(`क्या आपने ₹${amount} का भुगतान सफलतापूर्वक कर दिया है?\n\n'OK' दबाते ही आपके खाते में ${points} पॉइंट्स जोड़ दिए जाएंगे!`);
                 if (confirmPay) {
-                    userCredits += credits;
-                    updateCredits();
-                    alert(`🎉 बधाई हो! आपके वॉलेट में ${credits} क्रेडिट्स सफलतापूर्वक जोड़ दिए गए हैं।`);
+                    userPoints += points;
+                    updatePoints();
+                    alert(`🎉 बधाई हो! आपके वॉलेट में ${points} पॉइंट्स सफलतापूर्वक जोड़ दिए गए हैं।`);
                     closeRechargeModal();
                 }
             }, 3000);
@@ -204,14 +216,14 @@
                 return;
             }
 
-            if (userCredits < 10) {
-                alert('आपके क्रेडिट्स खत्म हो गए हैं! रील बनाने के लिए कम से कम 10 क्रेडिट्स चाहिए। कृपया रिचार्ज करें।');
+            if (userPoints < 10) {
+                alert('आपके पॉइंट्स खत्म हो गए हैं! रील बनाने के लिए कम से कम 10 पॉइंट्स चाहिए। कृपया रिचार्ज करें।');
                 openRechargeModal();
                 return;
             }
 
-            userCredits -= 10; 
-            updateCredits();
+            userPoints -= 10; // 1 रील = 10 पॉइंट्स
+            updatePoints();
 
             document.getElementById('loader').style.display = 'block';
             document.getElementById('resultSection').style.display = 'none';
