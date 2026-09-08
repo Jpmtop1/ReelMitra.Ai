@@ -50,8 +50,10 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         #resultSection { display: none; margin-top: 15px; text-align: center; }
-        .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
-        video { width: 100%; height: 100%; object-fit: cover; }
+        .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
+        
+        /* Direct Video Element */
+        #outputVideo { width: 100%; height: 100%; object-fit: cover; background: #000; }
         
         .watermark-overlay { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: #fff; border-left: 3px solid var(--primary); backdrop-filter: blur(4px); display: flex; align-items: center; gap: 5px; z-index: 10; }
         .custom-avatar-preview { position: absolute; top: 12px; right: 12px; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.8); z-index: 10; }
@@ -89,7 +91,7 @@
             </div>
         </div>
         <div class="coin-badge" onclick="openRechargeModal()">
-            <span>🪙 <strong id="coinCount">100</strong> पॉइंट्स</span>
+            <span>🪙 <strong id="coinCount">90</strong> पॉइंट्स</span>
         </div>
     </div>
 
@@ -99,7 +101,7 @@
 
         <div class="form-group">
             <label>रील का टॉपिक या स्क्रिप्ट प्रॉम्प्ट</label>
-            <textarea id="reelTopic" placeholder="जैसे: हनुमान जी के 12 नाम, मोटिवेशनल शायरी, या बिजनेस प्रमोशन..."></textarea>
+            <textarea id="reelTopic" placeholder="जैसे: हनुमान जी के 12 नाम, मोटिवेशनल शायरी, या बिजनेस प्रमोशन...">हनुमान जी के 12 नाम</textarea>
         </div>
 
         <div class="form-group">
@@ -129,10 +131,9 @@
         <div id="resultSection">
             <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;" id="successMsg">✅ रील सफलतापूर्वक तैयार हो गई!</p>
             <div class="video-container">
-                <video id="outputVideo" controls autoplay loop playsinline muted>
-                    <source src="" type="video/mp4" id="videoSource">
+                <video id="outputVideo" controls autoplay loop playsinline>
+                    Your browser does not support the video tag.
                 </video>
-                <!-- Custom Avatar Displayed inside video -->
                 <img id="displayAvatar" class="custom-avatar-preview" alt="Avatar">
                 <div class="watermark-overlay">⚡ ReelMitra.Ai | JP Mishra</div>
             </div>
@@ -144,7 +145,7 @@
         </div>
     </div>
 
-    <!-- Recharge Modal with JP Mishra UPI & QR -->
+    <!-- Recharge Modal -->
     <div id="rechargeModal">
         <div class="modal-content">
             <h3 style="margin-bottom: 2px; font-size: 16px;">🪙 पॉइंट्स रिचार्ज सेंटर</h3>
@@ -196,7 +197,7 @@
     </div>
 
     <script>
-        let userPoints = 100;
+        let userPoints = 90;
         let uploadedPhotoUrl = "";
 
         function updatePoints() {
@@ -268,25 +269,22 @@
                         clearInterval(interval);
                         document.getElementById('loader').style.display = 'none';
                         
-                        // Reliable high-speed working video streams
-                        let videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+                        // Ultra-stable direct public MP4 links
+                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
                         let lowerTopic = topic.toLowerCase();
 
-                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('bhagwan') || lowerTopic.includes('ram') || lowerTopic.includes('krishna') || lowerTopic.includes('god')) {
+                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god')) {
                             videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
-                        } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('romance') || lowerTopic.includes('dil')) {
+                        } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('dil')) {
                             videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
-                        } else if (lowerTopic.includes('motivation') || lowerTopic.includes('success') || lowerTopic.includes('jeet') || lowerTopic.includes('gym')) {
+                        } else if (lowerTopic.includes('motivation') || lowerTopic.includes('gym')) {
                             videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
-                        } else {
-                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4";
                         }
 
-                        document.getElementById('videoSource').src = videoSrc;
                         const videoElement = document.getElementById('outputVideo');
+                        videoElement.src = videoSrc;
                         videoElement.load();
 
-                        // Handle custom uploaded photo avatar inside video
                         const avatarElement = document.getElementById('displayAvatar');
                         if (uploadedPhotoUrl) {
                             avatarElement.src = uploadedPhotoUrl;
@@ -298,9 +296,8 @@
                         document.getElementById('successMsg').innerText = `✅ "${topic.substring(0, 15)}..." पर आधारित AI रील तैयार है!`;
                         document.getElementById('resultSection').style.display = 'block';
                         
-                        // Play video safely
                         videoElement.play().catch(e => {
-                            console.log("Auto-play prevented, user can click play", e);
+                            console.log("Autoplay blocked, user can press play", e);
                         });
                     }
                 }
