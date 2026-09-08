@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="coin-badge" onclick="openRechargeModal()">
-            <span>🪙 <strong id="coinCount">80</strong> पॉइंट्स</span>
+            <span>🪙 <strong id="coinCount">70</strong> पॉइंट्स</span>
         </div>
     </div>
 
@@ -100,7 +100,7 @@
 
         <div class="form-group">
             <label>रील का टॉपिक या स्क्रिप्ट प्रॉम्प्ट</label>
-            <textarea id="reelTopic" placeholder="जैसे: हनुमान जी के 12 नाम, मोटिवेशनल शायरी, या बिजनेस प्रमोशन..."></textarea>
+            <textarea id="reelTopic" placeholder="जैसे: राम जी का मंत्र, हनुमान जी के 12 नाम..."></textarea>
         </div>
 
         <div class="form-group">
@@ -196,7 +196,7 @@
     </div>
 
     <script>
-        let userPoints = 80;
+        let userPoints = 70;
         let uploadedPhotoUrl = "";
 
         function updatePoints() {
@@ -268,16 +268,12 @@
                         clearInterval(interval);
                         document.getElementById('loader').style.display = 'none';
                         
-                        // Ultra-Reliable Direct Video Stream Sources for Mobile Chrome
-                        let videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"; 
+                        // Using universally accessible reliable media URLs to prevent any playback error icons
+                        let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
                         let lowerTopic = topic.toLowerCase();
 
-                        if (lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('ram') || lowerTopic.includes('god') || lowerTopic.includes('bhakti') || lowerTopic.includes('नाम')) {
-                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
-                        } else if (lowerTopic.includes('love') || lowerTopic.includes('pyaar') || lowerTopic.includes('dil')) {
-                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
-                        } else if (lowerTopic.includes('motivation') || lowerTopic.includes('gym')) {
-                            videoSrc = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
+                        if (lowerTopic.includes('राम') || lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('god') || lowerTopic.includes('bhakti') || lowerTopic.includes('मंत्र') || lowerTopic.includes('नाम')) {
+                            videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
                         }
 
                         const videoElement = document.getElementById('outputVideo');
@@ -296,7 +292,7 @@
                         document.getElementById('resultSection').style.display = 'block';
                         
                         videoElement.play().catch(e => {
-                            console.log("Autoplay handled", e);
+                            console.log("Playback interaction required", e);
                         });
                     }
                 }
