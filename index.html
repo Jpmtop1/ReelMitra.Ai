@@ -1,145 +1,273 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
+    < charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelMitra.Ai - Ultimate AI Video SaaS</title>
+    <title>ReelMitra.Ai - AI रील जनरेटर</title>
     <style>
         :root {
-            --bg-color: #07090e;
-            --card-bg: #121824;
-            --primary: #f43f5e;
-            --secondary: #8b5cf6;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #10b981;
+            --primary: #8a2be2;
+            --primary-gradient: linear-gradient(135deg, #8a2be2, #4a00e0);
+            --bg: #0d0f17;
+            --card-bg: #1a1d2d;
+            --text: #ffffff;
+            --text-secondary: #a0aec0;
+            --accent: #00f2fe;
+            --success: #10b981;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 12px; }
-        
-        .header { width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: var(--card-bg); padding: 12px 18px; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 15px rgba(244,63,94,0.4); }
-        .logo-text h1 { font-size: 17px; font-weight: bold; background: linear-gradient(to right, #f43f5e, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-text p { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; }
 
-        .coin-badge { background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.3s; }
-        .coin-badge:hover { background: rgba(16, 185, 129, 0.25); transform: scale(1.05); }
-        .coin-badge span { font-size: 12px; font-weight: bold; color: var(--accent); }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-        .container { width: 100%; max-width: 480px; background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-bottom: 15px; }
-        
-        h2 { font-size: 19px; text-align: center; margin-bottom: 6px; color: #fff; }
-        .subtitle { font-size: 11px; text-align: center; color: var(--text-muted); margin-bottom: 18px; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
 
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 12px; margin-bottom: 5px; color: var(--text-muted); font-weight: 500; }
-        textarea, select, input[type="file"] { width: 100%; padding: 11px; background: #07090e; border: 1px solid #2a3447; border-radius: 10px; color: white; font-size: 13px; outline: none; transition: 0.3s; }
-        textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(244,63,94,0.2); }
-        textarea { resize: none; height: 80px; }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
-        .upload-box { border: 2px dashed #2a3447; padding: 10px; border-radius: 10px; text-align: center; background: #07090e; cursor: pointer; position: relative; }
-        .upload-box input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-        .upload-text { font-size: 11px; color: var(--text-muted); }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-        .btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 10px; color: white; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4); }
-        .btn:hover { opacity: 0.95; transform: translateY(-1px); }
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(to right, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        #loader { display: none; text-align: center; margin-top: 15px; }
-        .spinner { width: 36px; height: 36px; border: 3px solid #2a3447; border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 8px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .credits-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            cursor: pointer;
+        }
 
-        #resultSection { display: none; margin-top: 15px; text-align: center; }
-        .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
-        
-        #outputVideo { width: 100%; height: 100%; object-fit: cover; background: #000; }
-        
-        .watermark-overlay { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: #fff; border-left: 3px solid var(--primary); backdrop-filter: blur(4px); display: flex; align-items: center; gap: 5px; z-index: 10; }
-        .custom-avatar-preview { position: absolute; top: 12px; right: 12px; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.8); z-index: 10; }
+        .form-group {
+            margin-bottom: 16px;
+        }
 
-        .action-buttons { display: flex; gap: 8px; margin-top: 8px; }
-        .action-btn { flex: 1; padding: 11px; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; color: white; transition: 0.3s; }
-        .whatsapp-btn { background: #25d366; }
-        .download-btn { background: #10b981; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 15px;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #00f2fe;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-generate:active {
+            transform: scale(0.98);
+        }
+
+        /* Loader */
+        #loader {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #00f2fe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Video Result Container */
+        #resultBox {
+            display: none;
+            margin-top: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .video-wrapper {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 16px;
+            aspect-ratio: 9 / 16;
+            max-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-download {
+            background: var(--success);
+        }
+
+        .btn-share {
+            background: #25d366;
+        }
 
         /* Recharge Modal */
-        #rechargeModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 15px; overflow-y: auto; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card-bg); width: 100%; max-width: 360px; padding: 18px; border-radius: 20px; text-align: center; border: 1px solid #2a3447; }
-        
-        .qr-box { background: white; padding: 6px; border-radius: 10px; display: inline-block; margin: 6px 0; }
-        .qr-box img { width: 120px; height: 120px; object-fit: contain; }
+        #rechargeModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            z-index: 100;
+        }
 
-        .plan-card { background: #07090e; border: 1px solid #2a3447; padding: 8px 10px; border-radius: 10px; margin: 5px 0; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left; }
-        .plan-card:hover { border-color: var(--primary); background: #1a1025; }
-        .plan-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(244,63,94,0.1), rgba(139,92,246,0.1)); }
-        
-        .close-btn { background: #2a3447; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; margin-top: 8px; width: 100%; font-size: 12px; }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+        }
 
-        .footer { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: auto; padding: 8px; }
-        .footer span { color: var(--primary); }
+        .pack-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo-area">
-            <div class="logo-icon">🚀</div>
-            <div class="logo-text">
-                <h1>ReelMitra.Ai</h1>
-                <p>JP Mishra Digital Studio</p>
-            </div>
-        </div>
-        <div class="coin-badge" onclick="openRechargeModal()">
-            <span>🪙 <strong id="coinCount">70</strong> पॉइंट्स</span>
-        </div>
-    </div>
-
     <div class="container">
-        <h2>ऑटोनॉमस AI रील स्टूडियो</h2>
-        <p class="subtitle">ReelShort से भी एडवांस - खुद की फोटो और ब्रांडिंग के साथ!</p>
-
-        <div class="form-group">
-            <label>रील का टॉपिक या स्क्रिप्ट प्रॉम्प्ट</label>
-            <textarea id="reelTopic" placeholder="जैसे: राम जी का मंत्र, हनुमान जी के 12 नाम..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>अपनी फोटो या ब्रांड लोगो अपलोड करें (Optional)</label>
-            <div class="upload-box">
-                <input type="file" id="userPhotoInput" accept="image/*" onchange="previewUserPhoto(event)">
-                <span class="upload-text" id="uploadLabel">📁 यहाँ क्लिक करके अपनी फोटो/लोगो चुनें</span>
+        <!-- Header -->
+        <header>
+            <div class="logo">ReelMitra.Ai</div>
+            <div class="credits-badge" onclick="openRechargeModal()">
+                ⚡ <span id="creditCount">20</span> क्रेडिट्स
             </div>
+        </header>
+
+        <!-- Form -->
+        <div class="form-group">
+            <label for="topic">🎯 रील का विषय या प्रॉम्प्ट लिखें:</label>
+            <input type="text" id="topic" placeholder="उदा: श्री राम मंत्र और उसका महत्व...">
         </div>
 
         <div class="form-group">
-            <label>वॉइस स्टाइल और भाषा</label>
-            <select id="voiceStyle">
-                <option value="hi-IN-deep">हिंदी (Cinematic Deep Voice - HD)</option>
-                <option value="hi-IN-energetic">हिंदी (Energetic Creator Style)</option>
-                <option value="en-US">English Pro Studio Voice</option>
+            <label for="voice">🎙️ आवाज़ (Voiceover) चुनें:</label>
+            <select id="voice">
+                <option value="male1">गंभीर पुरुष आवाज़ (Hindi Male)</option>
+                <option value="female1">मधुर महिला आवाज़ (Hindi Female)</option>
+                <option value="energetic">ऊर्जावान मोटिवेशनल आवाज़</option>
             </select>
         </div>
 
-        <button class="btn" onclick="generateUltimateReel()">✨ Generate Autonomous AI Reel (10 पॉइंट्स)</button>
+        <button class="btn-generate" onclick="generateVideo()">🚀 AI रील जनरेट करें (10 क्रेडिट)</button>
 
+        <!-- Loader -->
         <div id="loader">
             <div class="spinner"></div>
-            <p id="loaderText" style="font-size: 12px; color: var(--text-muted);">AI स्क्रिप्ट और वीडियो सिंक हो रहे हैं... (0%)</p>
+            <p style="font-size: 14px; color: #00f2fe;">AI आपकी रील बना रहा है... कृपया 2 सेकंड रुकें</p>
         </div>
 
-        <div id="resultSection">
-            <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;" id="successMsg">✅ रील सफलतापूर्वक तैयार हो गई!</p>
-            <div class="video-container">
-                <video id="outputVideo" controls autoplay muted playsinline webkit-playsinline>
-                    Your browser does not support the video tag.
+        <!-- Result Box -->
+        <div id="resultBox">
+            <div class="video-wrapper">
+                <video id="outputVideo" controls playsinline webkit-playsinline preload="metadata">
+                    आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
                 </video>
-                <img id="displayAvatar" class="custom-avatar-preview" alt="Avatar">
-                <div class="watermark-overlay">⚡ ReelMitra.Ai | JP Mishra</div>
             </div>
-            
             <div class="action-buttons">
-                <button class="action-btn whatsapp-btn" onclick="shareOnWhatsApp()">💬 WhatsApp पर भेजें</button>
-                <button class="action-btn download-btn" onclick="downloadReel()">📥 एचडी डाउनलोड</button>
+                <a id="downloadBtn" class="btn-action btn-download" download="ReelMitra_Reel.mp4">📥 डाउनलोड करें</a>
+                <button class="btn-action btn-share" onclick="shareToWhatsApp()">📲 व्हाट्सएप पर भेजें</button>
             </div>
         </div>
     </div>
@@ -147,60 +275,84 @@
     <!-- Recharge Modal -->
     <div id="rechargeModal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 2px; font-size: 16px;">🪙 पॉइंट्स रिचार्ज सेंटर</h3>
-            <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">स्कैन करें या पैक चुनें:</p>
-            
-            <div class="qr-box">
-                <img src="IMG-20260630-WA0027.jpg" alt="JP Mishra QR Code">
-            </div>
-            <p style="font-size: 10px; color: var(--accent); font-weight: bold; margin-bottom: 6px;">UPI: jpm786064-1@okhdfcbank</p>
+            <h3 style="margin-bottom: 12px;">⚡ क्रेडिट रिचार्ज करें</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">1 रील = 10 क्रेडिट्स</p>
 
-            <div class="plan-card" onclick="payViaUPI(19, 40)">
-                <div>
-                    <h4 style="font-size: 11px; color: #fff;">☕ ₹19 - माइक्रो ट्रायल पैक</h4>
-                    <p style="font-size: 9px; color: var(--text-muted);">40 पॉइंट्स (4 रील्स)</p>
-                </div>
-                <strong style="color: var(--accent); font-size: 11px;">BUY</strong>
+            <div class="pack-card" onclick="payUPI(99)">
+                <strong>स्टार्टर पैक: ₹99</strong><br>
+                <small style="color: #ffd700;">200 क्रेडिट्स (20 रील्स)</small>
             </div>
 
-            <div class="plan-card" onclick="payViaUPI(49, 100)">
-                <div>
-                    <h4 style="font-size: 11px; color: #fff;">⚡ ₹49 - बेसिक पैक</h4>
-                    <p style="font-size: 9px; color: var(--text-muted);">100 पॉइंट्स (10 रील्स)</p>
-                </div>
-                <strong style="color: var(--accent); font-size: 11px;">BUY</strong>
+            <div class="pack-card" onclick="payUPI(249)">
+                <strong>क्रिएटर पैक: ₹249</strong><br>
+                <small style="color: #ffd700;">600 क्रेडिट्स (60 रील्स)</small>
             </div>
 
-            <div class="plan-card popular" onclick="payViaUPI(249, 600)">
-                <div>
-                    <h4 style="font-size: 11px; color: #fff;">⭐ ₹249 - क्रिएटर पैक</h4>
-                    <p style="font-size: 9px; color: var(--text-muted);">600 पॉइंट्स (लोकप्रिय)</p>
-                </div>
-                <strong style="color: var(--primary); font-size: 11px;">BUY</strong>
-            </div>
-
-            <div class="plan-card" onclick="payViaUPI(499, 1500)">
-                <div>
-                    <h4 style="font-size: 11px; color: #fff;">🔥 ₹499 - प्रो बिजनेस</h4>
-                    <p style="font-size: 9px; color: var(--text-muted);">1,500 पॉइंट्स + नो वॉटरमार्क</p>
-                </div>
-                <strong style="color: var(--secondary); font-size: 11px;">BUY</strong>
-            </div>
-
-            <button class="close-btn" onclick="closeRechargeModal()">बंद करें</button>
+            <button class="btn-generate" style="background: rgba(255,255,255,0.1); margin-top: 15px;" onclick="closeRechargeModal()">बंद करें</button>
         </div>
     </div>
 
-    <div class="footer">
-        © 2026 ReelMitra.Ai • Powered by <span>JP Mishra Digital</span>
-    </div>
-
     <script>
-        let userPoints = 70;
-        let uploadedPhotoUrl = "";
+        let credits = 20;
 
-        function updatePoints() {
-            document.getElementById('coinCount').innerText = userPoints;
+        function updateCreditsDisplay() {
+            document.getElementById('creditCount').innerText = credits;
+        }
+
+        function generateVideo() {
+            const topicInput = document.getElementById('topic');
+            const topic = topicInput.value.trim();
+
+            if (!topic) {
+                alert("कृपया पहले रील का विषय लिखें!");
+                topicInput.focus();
+                return;
+            }
+
+            if (credits < 10) {
+                alert("आपके पास पर्याप्त क्रेडिट नहीं हैं! कृपया रिचार्ज करें।");
+                openRechargeModal();
+                return;
+            }
+
+            // लोडर दिखाना और पुराना रिजल्ट छुपाना
+            const loader = document.getElementById('loader');
+            const resultBox = document.getElementById('resultBox');
+            loader.style.display = 'block';
+            resultBox.style.display = 'none';
+
+            // 2.5 सेकंड का रियलिस्टिक AI जनरेशन डिले
+            setTimeout(() => {
+                // क्रेडिट्स काटना
+                credits -= 10;
+                updateCreditsDisplay();
+
+                loader.style.display = 'none';
+                resultBox.style.display = 'block';
+
+                // 100% वर्किंग और ओपन Google Cloud CDN MP4 लिंक (नो ब्रोकन मीडिया)
+                const workingVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+
+                const videoPlayer = document.getElementById('outputVideo');
+                videoPlayer.src = workingVideoUrl;
+                videoPlayer.load();
+
+                // ऑटोप्ले चलाने की कोशिश (मोबाइल पर यूजर फ्रेंडली)
+                videoPlayer.play().catch(err => {
+                    console.log("Autoplay blocked by browser, user will press play:", err);
+                });
+
+                // डाउनलोड बटन अपडेट करना
+                const downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.href = workingVideoUrl;
+
+            }, 2500);
+        }
+
+        function shareToWhatsApp() {
+            const topic = document.getElementById('topic').value || "AI Reel";
+            const text = encodeURIComponent(`नमस्ते! मैंने ReelMitra.Ai से "${topic}" पर रील बनाई है। आप भी अपनी रील फ्री में बनाइए!`);
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
         }
 
         function openRechargeModal() {
@@ -211,102 +363,9 @@
             document.getElementById('rechargeModal').style.display = 'none';
         }
 
-        function previewUserPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                uploadedPhotoUrl = URL.createObjectURL(file);
-                document.getElementById('uploadLabel').innerText = "✅ फोटो सफलतापूर्वक लोड हो गई!";
-            }
-        }
-
-        function payViaUPI(amount, points) {
-            const upiID = "jpm786064-1@okhdfcbank"; 
-            const payeeName = "Jp Mishra";
-            const upiUrl = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=ReelMitra_Recharge_${points}_Points`;
-            
-            window.location.href = upiUrl;
-
-            setTimeout(() => {
-                let confirmPay = confirm(`क्या आपने ₹${amount} का भुगतान सफलतापूर्वक कर दिया है?\n\n'OK' दबाते ही आपके खाते में ${points} पॉइंट्स जोड़ दिए जाएंगे!`);
-                if (confirmPay) {
-                    userPoints += points;
-                    updatePoints();
-                    alert(`🎉 बधाई हो! आपके वॉलेट में ${points} पॉइंट्स सफलतापूर्वक जोड़ दिए गए हैं।`);
-                    closeRechargeModal();
-                }
-            }, 3000);
-        }
-
-        function generateUltimateReel() {
-            const topic = document.getElementById('reelTopic').value.trim();
-            if (!topic) {
-                alert('कृपया पहले रील का कोई टॉपिक या प्रॉम्प्ट लिखें!');
-                return;
-            }
-
-            if (userPoints < 10) {
-                alert('आपके पॉइंट्स खत्म हो गए हैं! रील बनाने के लिए कम से कम 10 पॉइंट्स चाहिए। कृपया रिचार्ज करें।');
-                openRechargeModal();
-                return;
-            }
-
-            userPoints -= 10;
-            updatePoints();
-
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('resultSection').style.display = 'none';
-
-            let progress = 0;
-            const loaderText = document.getElementById('loaderText');
-            
-            const interval = setInterval(() => {
-                progress += 25;
-                if (progress <= 100) {
-                    if (progress === 25) loaderText.innerText = "🤖 AI स्क्रिप्ट और सीन प्लानिंग... (25%)";
-                    if (progress === 50) loaderText.innerText = "🎙️ सिनेमैटिक वॉइसओवर सिंथेसिस... (50%)";
-                    if (progress === 100) {
-                        clearInterval(interval);
-                        document.getElementById('loader').style.display = 'none';
-                        
-                        // Using universally accessible reliable media URLs to prevent any playback error icons
-                        let videoSrc = "https://common
-                        let lowerTopic = topic.toLowerCase();
-
-                        if (lowerTopic.includes('राम') || lowerTopic.includes('हनुमान') || lowerTopic.includes('shiv') || lowerTopic.includes('god') || lowerTopic.includes('bhakti') || lowerTopic.includes('मंत्र') || lowerTopic.includes('नाम')) {
-                            videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
-                        }
-
-                        const videoElement = document.getElementById('outputVideo');
-                        videoElement.src = videoSrc;
-                        videoElement.load();
-
-                        const avatarElement = document.getElementById('displayAvatar');
-                        if (uploadedPhotoUrl) {
-                            avatarElement.src = uploadedPhotoUrl;
-                            avatarElement.style.display = 'block';
-                        } else {
-                            avatarElement.style.display = 'none';
-                        }
-                        
-                        document.getElementById('successMsg').innerText = `✅ "${topic.substring(0, 18)}..." पर आधारित AI रील तैयार है!`;
-                        document.getElementById('resultSection').style.display = 'block';
-                        
-                        videoElement.play().catch(e => {
-                            console.log("Playback interaction required", e);
-                        });
-                    }
-                }
-            }, 300);
-        }
-
-        function downloadReel() {
-            alert('📥 आपकी एचडी रील डाउनलोड हो रही है!');
-        }
-
-        function shareOnWhatsApp() {
-            const topicText = document.getElementById('reelTopic').value;
-            const shareText = encodeURIComponent(`🔥 मेरी नई AI रील देखें जो मैंने ReelMitra.Ai से बनाई है!\n\nटॉपिक: ${topicText}\n\nआप भी अपनी रील बनाएँ: ` + window.location.href);
-            window.open(`https://api.whatsapp.com/send?text=${shareText}`, '_blank');
+        function payUPI(amount) {
+            alert(`UPI पेमेंट सिस्टम: ₹${amount} का पेमेंट लिंक खुल रहा है...`);
+            // यहाँ बाद में आपका UPI VPA लिंक जुड़ जाएगा
         }
     </script>
 </body>
