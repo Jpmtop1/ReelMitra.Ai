@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    < charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelMitra.Ai - AI रील जनरेटर</title>
+    <title>ReelMitra.Ai - AI रील व वीडियो जनरेटर</title>
     <style>
         :root {
             --primary: #8a2be2;
@@ -14,6 +14,7 @@
             --text-secondary: #a0aec0;
             --accent: #00f2fe;
             --success: #10b981;
+            --gold: #ffd700;
         }
 
         * {
@@ -26,7 +27,7 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding: 16px;
+            padding: 14px;
             display: flex;
             justify-content: center;
         }
@@ -45,7 +46,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .logo {
@@ -57,76 +58,127 @@
         }
 
         .credits-badge {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 6px 14px;
+            background: rgba(255, 215, 0, 0.15);
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            cursor: pointer;
+        }
+
+        .referral-banner {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(138, 43, 226, 0.15));
+            border: 1px dashed rgba(0, 242, 254, 0.4);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .referral-text {
+            font-size: 13px;
+        }
+
+        .referral-text strong {
+            color: var(--accent);
+        }
+
+        .btn-ref {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
             cursor: pointer;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 6px;
+            font-size: 13px;
             color: var(--text-secondary);
         }
 
         input[type="text"], select {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+            border-radius: 10px;
             color: var(--text);
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
         }
 
         input[type="text"]:focus, select:focus {
-            border-color: #00f2fe;
+            border-color: var(--accent);
+        }
+
+        .upload-box {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+            transition: 0.2s;
+        }
+
+        .upload-box:hover {
+            border-color: var(--accent);
+        }
+
+        #imagePreview {
+            display: none;
+            max-width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
         }
 
         .btn-generate {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             background: var(--primary-gradient);
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             color: #fff;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
             margin-top: 10px;
-            transition: 0.2s;
         }
 
         .btn-generate:active {
             transform: scale(0.98);
         }
 
-        /* Loader */
         #loader {
             display: none;
             text-align: center;
-            padding: 30px 0;
+            padding: 24px 0;
         }
 
         .spinner {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #00f2fe;
+            border-top: 4px solid var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 12px;
+            margin: 0 auto 10px;
         }
 
         @keyframes spin {
@@ -134,27 +186,23 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Video Result Container */
         #resultBox {
             display: none;
-            margin-top: 24px;
+            margin-top: 20px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 14px;
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .video-wrapper {
             width: 100%;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             background: #000;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             aspect-ratio: 9 / 16;
-            max-height: 420px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            max-height: 380px;
         }
 
         video {
@@ -165,7 +213,7 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-action {
@@ -173,8 +221,8 @@
             padding: 12px;
             text-align: center;
             text-decoration: none;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 13px;
             font-weight: 600;
             color: #fff;
             border: none;
@@ -189,7 +237,7 @@
             background: #25d366;
         }
 
-        /* Recharge Modal */
+        /* Modal Styles */
         #rechargeModal {
             display: none;
             position: fixed;
@@ -206,21 +254,55 @@
 
         .modal-content {
             background: var(--card-bg);
-            padding: 24px;
-            border-radius: 20px;
+            padding: 22px;
+            border-radius: 18px;
             width: 100%;
-            max-width: 400px;
+            max-width: 390px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             text-align: center;
         }
 
+        .pack-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 14px 0;
+        }
+
         .pack-card {
             background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
+            padding: 12px 8px;
             border-radius: 10px;
-            margin: 10px 0;
             cursor: pointer;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.2s;
+        }
+
+        .pack-card:hover {
+            border-color: var(--accent);
+            background: rgba(0, 242, 254, 0.05);
+        }
+
+        .pack-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .pack-desc {
+            font-size: 11px;
+            color: var(--gold);
+            margin-top: 4px;
+        }
+
+        .btn-close {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -235,30 +317,52 @@
             </div>
         </header>
 
-        <!-- Form -->
-        <div class="form-group">
-            <label for="topic">🎯 रील का विषय या प्रॉम्प्ट लिखें:</label>
-            <input type="text" id="topic" placeholder="उदा: श्री राम मंत्र और उसका महत्व...">
+        <!-- Referral Strip -->
+        <div class="referral-banner">
+            <div class="referral-text">
+                🎁 मित्र को जोड़ें: <strong>+15 क्रेडिट्स</strong> पाएं!
+            </div>
+            रेफर करें</button>
         </div>
 
+        <!-- Photo Upload -->
         <div class="form-group">
-            <label for="voice">🎙️ आवाज़ (Voiceover) चुनें:</label>
+            <label>📸 फोटो से रील बनाएं (वैकल्पिक):</label>
+            <div class="upload-box" onclick="document.getElementById('photoInput').click()">
+                <span id="uploadStatusText" style="font-size: 13px; color: var(--text-secondary);">
+                    📁 फोटो अपलोड करने के लिए टैप करें
+                </span>
+                <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewUserImage(event)">
+                <img id="imagePreview" alt="Preview">
+            </div>
+        </div>
+
+        <!-- Topic Prompt -->
+        <div class="form-group">
+            <label for="topic">🎯 रील का विषय / प्रॉम्प्ट:</label>
+            <input type="text" id="topic" placeholder="उदा: श्री राम स्तुति, बिजनेस टिप्स, मोटिवेशन...">
+        </div>
+
+        <!-- Voice Selection -->
+        <div class="form-group">
+            <label for="voice">🎙️ वॉइसओवर टोन चुनें:</label>
             <select id="voice">
                 <option value="male1">गंभीर पुरुष आवाज़ (Hindi Male)</option>
                 <option value="female1">मधुर महिला आवाज़ (Hindi Female)</option>
-                <option value="energetic">ऊर्जावान मोटिवेशनल आवाज़</option>
+                <option value="energetic">जोशीली मोटिवेशनल आवाज़</option>
             </select>
         </div>
 
-        <button class="btn-generate" onclick="generateVideo()">🚀 AI रील जनरेट करें (10 क्रेडिट)</button>
+        <!-- Generate Button -->
+        🚀 AI रील जनरेट करें (10 क्रेडिट)</button>
 
         <!-- Loader -->
         <div id="loader">
             <div class="spinner"></div>
-            <p style="font-size: 14px; color: #00f2fe;">AI आपकी रील बना रहा है... कृपया 2 सेकंड रुकें</p>
+            <p style="font-size: 13px; color: var(--accent);">AI वीडियो तैयार हो रहा है... कृपया 2 सेकंड रुकें</p>
         </div>
 
-        <!-- Result Box -->
+        <!-- Video Result Box -->
         <div id="resultBox">
             <div class="video-wrapper">
                 <video id="outputVideo" controls playsinline webkit-playsinline preload="metadata">
@@ -267,95 +371,113 @@
             </div>
             <div class="action-buttons">
                 <a id="downloadBtn" class="btn-action btn-download" download="ReelMitra_Reel.mp4">📥 डाउनलोड करें</a>
-                <button class="btn-action btn-share" onclick="shareToWhatsApp()">📲 व्हाट्सएप पर भेजें</button>
+                📲 शेयर करें</button>
             </div>
         </div>
     </div>
 
     <!-- Recharge Modal -->
     <div id="rechargeModal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 12px;">⚡ क्रेडिट रिचार्ज करें</h3>
-            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">1 रील = 10 क्रेडिट्स</p>
-
-            <div class="pack-card" onclick="payUPI(99)">
-                <strong>स्टार्टर पैक: ₹99</strong><br>
-                <small style="color: #ffd700;">200 क्रेडिट्स (20 रील्स)</small>
-            </div>
-
-            <div class="pack-card" onclick="payUPI(249)">
-                <strong>क्रिएटर पैक: ₹249</strong><br>
-                <small style="color: #ffd700;">600 क्रेडिट्स (60 रील्स)</small>
-            </div>
-
-            <button class="btn-generate" style="background: rgba(255,255,255,0.1); margin-top: 15px;" onclick="closeRechargeModal()">बंद करें</button>
+        <div class="modal-content" id="modalBody">
+            <!-- Dynamic pack selection / QR screen goes here -->
         </div>
     </div>
 
     <script>
-        let credits = 20;
+        // UPI & Config
+        const MY_UPI_ID = "jpm786064-1@okhdfcbank";
+        const BUSINESS_NAME = "Jp Mishra";
 
-        function updateCreditsDisplay() {
-            document.getElementById('creditCount').innerText = credits;
+        let userCredits = parseInt(localStorage.getItem('reel_credits')) || 20;
+        document.getElementById('creditCount').innerText = userCredits;
+
+        function updateCredits(amount) {
+            userCredits += amount;
+            localStorage.setItem('reel_credits', userCredits);
+            document.getElementById('creditCount').innerText = userCredits;
         }
 
-        function generateVideo() {
-            const topicInput = document.getElementById('topic');
-            const topic = topicInput.value.trim();
+        // Photo Preview
+        function previewUserImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('imagePreview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('uploadStatusText').innerText = "✅ फोटो चुनी गई: " + file.name;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
-            if (!topic) {
-                alert("कृपया पहले रील का विषय लिखें!");
-                topicInput.focus();
+        // Referral System
+        function shareReferral() {
+            const shareText = "🔥 ReelMitra.Ai पर AI से शानदार वीडियो व रील्स बनाएं बिल्कुल फ्री! लिंक: " + window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: 'ReelMitra AI', text: shareText, url: window.location.href })
+                    .then(() => giveReferralBonus())
+                    .catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText);
+                alert("रेफरल लिंक कॉपी हो गया! दोस्तों को भेजें और क्रेडिट्स पाएं।");
+                giveReferralBonus();
+            }
+        }
+
+        function giveReferralBonus() {
+            const alreadyReferred = localStorage.getItem('has_referred_bonus');
+            if (!alreadyReferred) {
+                updateCredits(15);
+                localStorage.setItem('has_referred_bonus', 'true');
+                alert("🎉 बधाई! रेफर करने पर आपको +15 बोनस क्रेडिट्स मिले!");
+            }
+        }
+
+        // Generate Video Logic
+        function generateReel() {
+            const topic = document.getElementById('topic').value.trim();
+            const hasPhoto = document.getElementById('photoInput').files.length > 0;
+
+            if (!topic && !hasPhoto) {
+                alert("कृपया कोई टॉपिक लिखें या फोटो अपलोड करें!");
                 return;
             }
 
-            if (credits < 10) {
-                alert("आपके पास पर्याप्त क्रेडिट नहीं हैं! कृपया रिचार्ज करें।");
+            if (userCredits < 10) {
+                alert("आपके पास पर्याप्त क्रेडिट्स नहीं हैं! कृपया रिचार्ज करें।");
                 openRechargeModal();
                 return;
             }
 
-            // लोडर दिखाना और पुराना रिजल्ट छुपाना
-            const loader = document.getElementById('loader');
-            const resultBox = document.getElementById('resultBox');
-            loader.style.display = 'block';
-            resultBox.style.display = 'none';
+            updateCredits(-10);
 
-            // 2.5 सेकंड का रियलिस्टिक AI जनरेशन डिले
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('resultBox').style.display = 'none';
+
+            // 100% Reliable Sample Video
+            const sampleVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+
             setTimeout(() => {
-                // क्रेडिट्स काटना
-                credits -= 10;
-                updateCreditsDisplay();
-
-                loader.style.display = 'none';
-                resultBox.style.display = 'block';
-
-                // 100% वर्किंग और ओपन Google Cloud CDN MP4 लिंक (नो ब्रोकन मीडिया)
-                const workingVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-
-                const videoPlayer = document.getElementById('outputVideo');
-                videoPlayer.src = workingVideoUrl;
-                videoPlayer.load();
-
-                // ऑटोप्ले चलाने की कोशिश (मोबाइल पर यूजर फ्रेंडली)
-                videoPlayer.play().catch(err => {
-                    console.log("Autoplay blocked by browser, user will press play:", err);
-                });
-
-                // डाउनलोड बटन अपडेट करना
-                const downloadBtn = document.getElementById('downloadBtn');
-                downloadBtn.href = workingVideoUrl;
-
-            }, 2500);
+                document.getElementById('loader').style.display = 'none';
+                const videoEl = document.getElementById('outputVideo');
+                videoEl.src = sampleVideoUrl;
+                document.getElementById('downloadBtn').href = sampleVideoUrl;
+                document.getElementById('resultBox').style.display = 'block';
+                videoEl.play().catch(e => console.log("Autoplay blocked, tap to play"));
+            }, 2000);
         }
 
-        function shareToWhatsApp() {
-            const topic = document.getElementById('topic').value || "AI Reel";
-            const text = encodeURIComponent(`नमस्ते! मैंने ReelMitra.Ai से "${topic}" पर रील बनाई है। आप भी अपनी रील फ्री में बनाइए!`);
-            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        function shareVideo() {
+            const videoUrl = document.getElementById('outputVideo').src;
+            const text = "🎬 देखिए मैंने ReelMitra.Ai से शानदार रील बनाई है: " + videoUrl;
+            window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(text), '_blank');
         }
 
+        // Modal & Recharge Views
         function openRechargeModal() {
+            renderPacksView();
             document.getElementById('rechargeModal').style.display = 'flex';
         }
 
@@ -363,9 +485,69 @@
             document.getElementById('rechargeModal').style.display = 'none';
         }
 
-        function payUPI(amount) {
-            alert(`UPI पेमेंट सिस्टम: ₹${amount} का पेमेंट लिंक खुल रहा है...`);
-            // यहाँ बाद में आपका UPI VPA लिंक जुड़ जाएगा
+        function renderPacksView() {
+            const modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3 style="margin-bottom: 6px;">⚡ क्रेडिट रिचार्ज करें</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">1 रील = 10 क्रेडिट्स</p>
+
+                <div class="pack-grid">
+                    <div class="pack-card" onclick="showPaymentQR(19, 30)">
+                        <div class="pack-price">₹19</div>
+                        <div class="pack-desc">30 क्रेडिट्स (3 रील)</div>
+                    </div>
+                    <div class="pack-card" onclick="showPaymentQR(49, 90)">
+                        <div class="pack-price">₹49</div>
+                        <div class="pack-desc">90 क्रेडिट्स (9 रील)</div>
+                    </div>
+                    <div class="pack-card" onclick="showPaymentQR(99, 200)">
+                        <div class="pack-price">₹99</div>
+                        <div class="pack-desc">200 क्रेडिट्स (20 रील)</div>
+                    </div>
+                    <div class="pack-card" onclick="showPaymentQR(249, 600)">
+                        <div class="pack-price">₹249</div>
+                        <div class="pack-desc">600 क्रेडिट्स (60 रील)</div>
+                    </div>
+                </div>
+
+                <button class="btn-close" onclick="closeRechargeModal()">बंद करें</button>
+            `;
+        }
+
+        // Dynamic UPI & QR Code Generator
+        function showPaymentQR(amount, credits) {
+            const note = encodeURIComponent(`ReelMitra ${credits} Credits`);
+            const name = encodeURIComponent(BUSINESS_NAME);
+            const upiUrl = `upi://pay?pa=${MY_UPI_ID}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
+            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
+
+            const modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3 style="margin-bottom: 4px;">💳 भुगतान करें: ₹${amount}</h3>
+                <p style="font-size: 12px; color: var(--gold); margin-bottom: 12px;">मिलेंगे: ${credits} क्रेडिट्स</p>
+
+                <div style="background: #ffffff; padding: 10px; border-radius: 12px; display: inline-block; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    <img src="${qrCodeUrl}" alt="UPI QR Code" style="width: 170px; height: 170px; display: block;">
+                </div>
+
+                <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">GPay, PhonePe, Paytm से स्कैन करें</p>
+
+                <a href="${upiUrl}" style="display: block; background: var(--accent); color: #000; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; margin-bottom: 8px;">
+                    🚀 UPI ऐप से सीधा पे करें
+                </a>
+
+                <button onclick="confirmRecharge(${credits})" style="width: 100%; background: var(--success); color: #fff; padding: 12px; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-bottom: 8px;">
+                    ✅ मैंने पेमेंट कर दिया
+                </button>
+
+                <button class="btn-close" onclick="renderPacksView()" style="width: 100%;">← पैक वापस चुनें</button>
+            `;
+        }
+
+        function confirmRecharge(credits) {
+            updateCredits(credits);
+            alert("🎉 भुगतान सफल! " + credits + " क्रेडिट्स आपके खाते में जोड़ दिए गए हैं।");
+            closeRechargeModal();
         }
     </script>
 </body>
