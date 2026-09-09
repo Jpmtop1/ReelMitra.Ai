@@ -1,554 +1,1034 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelMitra.Ai - AI रील व वीडियो जनरेटर</title>
-    <style>
-        :root {
-            --primary: #8a2be2;
-            --primary-gradient: linear-gradient(135deg, #8a2be2, #4a00e0);
-            --bg: #0d0f17;
-            --card-bg: #1a1d2d;
-            --text: #ffffff;
-            --text-secondary: #a0aec0;
-            --accent: #00f2fe;
-            --success: #10b981;
-            --gold: #ffd700;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 14px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: 800;
-            background: linear-gradient(to right, #00f2fe, #4facfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .credits-badge {
-            background: rgba(255, 215, 0, 0.15);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--gold);
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            cursor: pointer;
-        }
-
-        .referral-banner {
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(138, 43, 226, 0.15));
-            border: 1px dashed rgba(0, 242, 254, 0.4);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .referral-text {
-            font-size: 13px;
-        }
-
-        .referral-text strong {
-            color: var(--accent);
-        }
-
-        .btn-ref {
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        input[type="text"], select {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-        }
-
-        input[type="text"]:focus, select:focus {
-            border-color: var(--accent);
-        }
-
-        .upload-box {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 14px;
-            text-align: center;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.02);
-            transition: 0.2s;
-        }
-
-        .upload-box:hover {
-            border-color: var(--accent);
-        }
-
-        #imagePreview {
-            display: none;
-            max-width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .btn-generate {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary-gradient);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
-            margin-top: 10px;
-        }
-
-        .btn-generate:active {
-            transform: scale(0.98);
-        }
-
-        #loader {
-            display: none;
-            text-align: center;
-            padding: 24px 0;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #resultBox {
-            display: none;
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 14px;
-            padding: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .video-wrapper {
-            width: 100%;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 12px;
-            aspect-ratio: 9 / 16;
-            max-height: 380px;
-        }
-
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-download {
-            background: var(--success);
-        }
-
-        .btn-share {
-            background: #25d366;
-        }
-
-        /* Modal Styles */
-        #rechargeModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            padding: 22px;
-            border-radius: 18px;
-            width: 100%;
-            max-width: 390px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            text-align: center;
-        }
-
-        .pack-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 14px 0;
-        }
-
-        .pack-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px 8px;
-            border-radius: 10px;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: 0.2s;
-        }
-
-        .pack-card:hover {
-            border-color: var(--accent);
-            background: rgba(0, 242, 254, 0.05);
-        }
-
-        .pack-price {
-            font-size: 16px;
-            font-weight: 800;
-            color: #fff;
-        }
-
-        .pack-desc {
-            font-size: 11px;
-            color: var(--gold);
-            margin-top: 4px;
-        }
-
-        .btn-close {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <div class="logo">ReelMitra.Ai</div>
-            <div class="credits-badge" onclick="openRechargeModal()">
-                ⚡ <span id="creditCount">20</span> क्रेडिट्स
-            </div>
-        </header>
-
-        <!-- Referral Strip -->
-        <div class="referral-banner">
-            <div class="referral-text">
-                🎁 मित्र को जोड़ें: <strong>+15 क्रेडिट्स</strong> पाएं!
-            </div>
-            रेफर करें</button>
-        </div>
-
-        <!-- Photo Upload -->
-        <div class="form-group">
-            <label>📸 फोटो से रील बनाएं (वैकल्पिक):</label>
-            <div class="upload-box" onclick="document.getElementById('photoInput').click()">
-                <span id="uploadStatusText" style="font-size: 13px; color: var(--text-secondary);">
-                    📁 फोटो अपलोड करने के लिए टैप करें
-                </span>
-                <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewUserImage(event)">
-                <img id="imagePreview" alt="Preview">
-            </div>
-        </div>
-
-        <!-- Topic Prompt -->
-        <div class="form-group">
-            <label for="topic">🎯 रील का विषय / प्रॉम्प्ट:</label>
-            <input type="text" id="topic" placeholder="उदा: श्री राम स्तुति, बिजनेस टिप्स, मोटिवेशन...">
-        </div>
-
-        <!-- Voice Selection -->
-        <div class="form-group">
-            <label for="voice">🎙️ वॉइसओवर टोन चुनें:</label>
-            <select id="voice">
-                <option value="male1">गंभीर पुरुष आवाज़ (Hindi Male)</option>
-                <option value="female1">मधुर महिला आवाज़ (Hindi Female)</option>
-                <option value="energetic">जोशीली मोटिवेशनल आवाज़</option>
-            </select>
-        </div>
-
-        <!-- Generate Button -->
-        🚀 AI रील जनरेट करें (10 क्रेडिट)</button>
-
-        <!-- Loader -->
-        <div id="loader">
-            <div class="spinner"></div>
-            <p style="font-size: 13px; color: var(--accent);">AI वीडियो तैयार हो रहा है... कृपया 2 सेकंड रुकें</p>
-        </div>
-
-        <!-- Video Result Box -->
-        <div id="resultBox">
-            <div class="video-wrapper">
-                <video id="outputVideo" controls playsinline webkit-playsinline preload="metadata">
-                    आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
-                </video>
-            </div>
-            <div class="action-buttons">
-                <a id="downloadBtn" class="btn-action btn-download" download="ReelMitra_Reel.mp4">📥 डाउनलोड करें</a>
-                📲 शेयर करें</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recharge Modal -->
-    <div id="rechargeModal">
-        <div class="modal-content" id="modalBody">
-            <!-- Dynamic pack selection / QR screen goes here -->
-        </div>
-    </div>
-
-    <script>
-        // UPI & Config
-        const MY_UPI_ID = "jpm786064-1@okhdfcbank";
-        const BUSINESS_NAME = "Jp Mishra";
-
-        let userCredits = parseInt(localStorage.getItem('reel_credits')) || 20;
-        document.getElementById('creditCount').innerText = userCredits;
-
-        function updateCredits(amount) {
-            userCredits += amount;
-            localStorage.setItem('reel_credits', userCredits);
-            document.getElementById('creditCount').innerText = userCredits;
-        }
-
-        // Photo Preview
-        function previewUserImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById('imagePreview');
-                    img.src = e.target.result;
-                    img.style.display = 'block';
-                    document.getElementById('uploadStatusText').innerText = "✅ फोटो चुनी गई: " + file.name;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Referral System
-        function shareReferral() {
-            const shareText = "🔥 ReelMitra.Ai पर AI से शानदार वीडियो व रील्स बनाएं बिल्कुल फ्री! लिंक: " + window.location.href;
-            if (navigator.share) {
-                navigator.share({ title: 'ReelMitra AI', text: shareText, url: window.location.href })
-                    .then(() => giveReferralBonus())
-                    .catch(() => {});
-            } else {
-                navigator.clipboard.writeText(shareText);
-                alert("रेफरल लिंक कॉपी हो गया! दोस्तों को भेजें और क्रेडिट्स पाएं।");
-                giveReferralBonus();
-            }
-        }
-
-        function giveReferralBonus() {
-            const alreadyReferred = localStorage.getItem('has_referred_bonus');
-            if (!alreadyReferred) {
-                updateCredits(15);
-                localStorage.setItem('has_referred_bonus', 'true');
-                alert("🎉 बधाई! रेफर करने पर आपको +15 बोनस क्रेडिट्स मिले!");
-            }
-        }
-
-        // Generate Video Logic
-        function generateReel() {
-            const topic = document.getElementById('topic').value.trim();
-            const hasPhoto = document.getElementById('photoInput').files.length > 0;
-
-            if (!topic && !hasPhoto) {
-                alert("कृपया कोई टॉपिक लिखें या फोटो अपलोड करें!");
-                return;
-            }
-
-            if (userCredits < 10) {
-                alert("आपके पास पर्याप्त क्रेडिट्स नहीं हैं! कृपया रिचार्ज करें।");
-                openRechargeModal();
-                return;
-            }
-
-            updateCredits(-10);
-
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('resultBox').style.display = 'none';
-
-            // 100% Reliable Sample Video
-            const sampleVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-
-            setTimeout(() => {
-                document.getElementById('loader').style.display = 'none';
-                const videoEl = document.getElementById('outputVideo');
-                videoEl.src = sampleVideoUrl;
-                document.getElementById('downloadBtn').href = sampleVideoUrl;
-                document.getElementById('resultBox').style.display = 'block';
-                videoEl.play().catch(e => console.log("Autoplay blocked, tap to play"));
-            }, 2000);
-        }
-
-        function shareVideo() {
-            const videoUrl = document.getElementById('outputVideo').src;
-            const text = "🎬 देखिए मैंने ReelMitra.Ai से शानदार रील बनाई है: " + videoUrl;
-            window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(text), '_blank');
-        }
-
-        // Modal & Recharge Views
-        function openRechargeModal() {
-            renderPacksView();
-            document.getElementById('rechargeModal').style.display = 'flex';
-        }
-
-        function closeRechargeModal() {
-            document.getElementById('rechargeModal').style.display = 'none';
-        }
-
-        function renderPacksView() {
-            const modal = document.getElementById('modalBody');
-            modal.innerHTML = `
-                <h3 style="margin-bottom: 6px;">⚡ क्रेडिट रिचार्ज करें</h3>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">1 रील = 10 क्रेडिट्स</p>
-
-                <div class="pack-grid">
-                    <div class="pack-card" onclick="showPaymentQR(19, 30)">
-                        <div class="pack-price">₹19</div>
-                        <div class="pack-desc">30 क्रेडिट्स (3 रील)</div>
-                    </div>
-                    <div class="pack-card" onclick="showPaymentQR(49, 90)">
-                        <div class="pack-price">₹49</div>
-                        <div class="pack-desc">90 क्रेडिट्स (9 रील)</div>
-                    </div>
-                    <div class="pack-card" onclick="showPaymentQR(99, 200)">
-                        <div class="pack-price">₹99</div>
-                        <div class="pack-desc">200 क्रेडिट्स (20 रील)</div>
-                    </div>
-                    <div class="pack-card" onclick="showPaymentQR(249, 600)">
-                        <div class="pack-price">₹249</div>
-                        <div class="pack-desc">600 क्रेडिट्स (60 रील)</div>
-                    </div>
-                </div>
-
-                <button class="btn-close" onclick="closeRechargeModal()">बंद करें</button>
-            `;
-        }
-
-        // Dynamic UPI & QR Code Generator
-        function showPaymentQR(amount, credits) {
-            const note = encodeURIComponent(`ReelMitra ${credits} Credits`);
-            const name = encodeURIComponent(BUSINESS_NAME);
-            const upiUrl = `upi://pay?pa=${MY_UPI_ID}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
-            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
-
-            const modal = document.getElementById('modalBody');
-            modal.innerHTML = `
-                <h3 style="margin-bottom: 4px;">💳 भुगतान करें: ₹${amount}</h3>
-                <p style="font-size: 12px; color: var(--gold); margin-bottom: 12px;">मिलेंगे: ${credits} क्रेडिट्स</p>
-
-                <div style="background: #ffffff; padding: 10px; border-radius: 12px; display: inline-block; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-                    <img src="${qrCodeUrl}" alt="UPI QR Code" style="width: 170px; height: 170px; display: block;">
-                </div>
-
-                <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">GPay, PhonePe, Paytm से स्कैन करें</p>
-
-                <a href="${upiUrl}" style="display: block; background: var(--accent); color: #000; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; margin-bottom: 8px;">
-                    🚀 UPI ऐप से सीधा पे करें
-                </a>
-
-                <button onclick="confirmRecharge(${credits})" style="width: 100%; background: var(--success); color: #fff; padding: 12px; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-bottom: 8px;">
-                    ✅ मैंने पेमेंट कर दिया
-                </button>
-
-                <button class="btn-close" onclick="renderPacksView()" style="width: 100%;">← पैक वापस चुनें</button>
-            `;
-        }
-
-        function confirmRecharge(credits) {
-            updateCredits(credits);
-            alert("🎉 भुगतान सफल! " + credits + " क्रेडिट्स आपके खाते में जोड़ दिए गए हैं।");
-            closeRechargeModal();
-        }
-    </script>
-</body>
-    </html>
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+const PORT = process.env.PORT || 10000;
+
+// =====================================================
+// REELMITRA.AI PRO
+// JP Mishra Digital
+// =====================================================
+
+// -----------------------------
+// CORS
+// -----------------------------
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
+}));
+
+// Photo/Base64 upload के लिए limit
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true, limit: "25mb" }));
+
+// =====================================================
+// BRAND SETTINGS
+// =====================================================
+
+const BRAND = {
+  name: "ReelMitra.Ai Pro",
+  creator: "JP Mishra Digital",
+  watermark: "Created with ReelMitra.Ai • JP Mishra Digital",
+
+  upiId: "jpm786064-1@okhdfcbank",
+
+  // QR image को frontend/public/assets/upi-qr.jpg में रखें
+  qrCodeUrl:
+    "https://jpmtop1.github.io/ReelMitra.Ai/assets/upi-qr.jpg"
+};
+
+// =====================================================
+// POINT PACKS
+// =====================================================
+
+const PACKS = {
+  19: {
+    amount: 19,
+    points: 100,
+    name: "Creator Pack"
+  },
+
+  49: {
+    amount: 49,
+    points: 300,
+    name: "Pro Pack"
+  },
+
+  99: {
+    amount: 99,
+    points: 700,
+    name: "Super Creator"
+  },
+
+  199: {
+    amount: 199,
+    points: 1500,
+    name: "Ultimate Creator"
+  }
+};
+
+// =====================================================
+// DEMO USER DATABASE
+// Production में Supabase database लगाएँ
+// =====================================================
+
+const users = new Map();
+
+function createUser(userId) {
+
+  if (!userId) {
+    userId = "demo-user";
+  }
+
+  if (!users.has(userId)) {
+
+    users.set(userId, {
+      userId,
+      name: "JP Mishra",
+      points: 150,
+      referralCode:
+        "JP" +
+        Math.random()
+          .toString(36)
+          .substring(2, 8)
+          .toUpperCase(),
+
+      referredBy: null,
+      referralCount: 0,
+      totalCreated: 0,
+
+      plan: "Free",
+
+      createdAt: new Date().toISOString()
+    });
+
+  }
+
+  return users.get(userId);
+}
+
+// =====================================================
+// HOME / HEALTH CHECK
+// =====================================================
+
+app.get("/", (req, res) => {
+
+  res.json({
+
+    success: true,
+
+    app: BRAND.name,
+
+    message:
+      "ReelMitra.Ai Pro Backend is Running Live! 🚀",
+
+    creator: BRAND.creator,
+
+    features: [
+      "Text to Reel",
+      "Photo to Video",
+      "AI Script",
+      "AI Voice",
+      "9:16 Reel",
+      "Points",
+      "Referral",
+      "UPI Payment",
+      "QR Payment",
+      "Social Sharing",
+      "WhatsApp Sharing",
+      "Advanced Creator Tools"
+    ]
+
+  });
+
+});
+
+// =====================================================
+// APP CONFIG
+// =====================================================
+
+app.get("/api/config", (req, res) => {
+
+  res.json({
+
+    success: true,
+
+    appName: BRAND.name,
+
+    creator: BRAND.creator,
+
+    watermark: BRAND.watermark,
+
+    upi: {
+
+      id: BRAND.upiId,
+
+      name: "JP Mishra",
+
+      qrCode: BRAND.qrCodeUrl,
+
+      payLinks: {
+
+        rs19:
+          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=19&cu=INR`,
+
+        rs49:
+          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=49&cu=INR`,
+
+        rs99:
+          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=99&cu=INR`,
+
+        rs199:
+          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=199&cu=INR`
+
+      }
+
+    },
+
+    packs: PACKS
+
+  });
+
+});
+
+// =====================================================
+// WALLET / POINTS
+// =====================================================
+
+app.get("/api/wallet", (req, res) => {
+
+  const user = createUser(
+    req.query.userId || "demo-user"
+  );
+
+  res.json({
+
+    success: true,
+
+    userId: user.userId,
+
+    name: user.name,
+
+    points: user.points,
+
+    plan: user.plan,
+
+    referralCode: user.referralCode,
+
+    referralCount: user.referralCount,
+
+    totalCreated: user.totalCreated
+
+  });
+
+});
+
+// =====================================================
+// DAILY BONUS
+// =====================================================
+
+const dailyBonus = new Map();
+
+app.post("/api/daily-bonus", (req, res) => {
+
+  const userId = req.body.userId || "demo-user";
+
+  const user = createUser(userId);
+
+  const today =
+    new Date().toISOString().slice(0, 10);
+
+  const key = `${userId}-${today}`;
+
+  if (dailyBonus.has(key)) {
+
+    return res.status(409).json({
+
+      success: false,
+
+      error: "आज का Daily Bonus पहले ही लिया जा चुका है।",
+
+      points: user.points
+
+    });
+
+  }
+
+  user.points += 10;
+
+  dailyBonus.set(key, true);
+
+  res.json({
+
+    success: true,
+
+    bonus: 10,
+
+    points: user.points,
+
+    message:
+      "🎁 आज के 10 Bonus Points मिल गए!"
+
+  });
+
+});
+
+// =====================================================
+// REFERRAL SYSTEM
+// =====================================================
+
+app.post("/api/referral/apply", (req, res) => {
+
+  const {
+    userId = "demo-user",
+    referralCode
+  } = req.body;
+
+  const user = createUser(userId);
+
+  if (!referralCode) {
+
+    return res.status(400).json({
+
+      success: false,
+
+      error: "Referral Code जरूरी है।"
+
+    });
+
+  }
+
+  if (user.referredBy) {
+
+    return res.status(409).json({
+
+      success: false,
+
+      error: "आप पहले ही referral इस्तेमाल कर चुके हैं।",
+
+      points: user.points
+
+    });
+
+  }
+
+  let referrer = null;
+
+  for (const u of users.values()) {
+
+    if (
+      u.referralCode.toUpperCase() ===
+      referralCode.toUpperCase()
+    ) {
+
+      referrer = u;
+      break;
+
+    }
+
+  }
+
+  if (!referrer) {
+
+    return res.status(404).json({
+
+      success: false,
+
+      error: "Invalid Referral Code"
+
+    });
+
+  }
+
+  if (referrer.userId === user.userId) {
+
+    return res.status(400).json({
+
+      success: false,
+
+      error: "अपना Referral Code इस्तेमाल नहीं कर सकते।"
+
+    });
+
+  }
+
+  // दोनों को bonus
+  user.points += 25;
+
+  referrer.points += 25;
+
+  referrer.referralCount += 1;
+
+  user.referredBy = referrer.referralCode;
+
+  res.json({
+
+    success: true,
+
+    bonus: 25,
+
+    points: user.points,
+
+    message:
+      "🎁 Referral सफल! आपको 25 Points मिले।"
+
+  });
+
+});
+
+// =====================================================
+// POINT PACK LIST
+// =====================================================
+
+app.get("/api/packs", (req, res) => {
+
+  res.json({
+
+    success: true,
+
+    packs: PACKS
+
+  });
+
+});
+
+// =====================================================
+// UPI PAYMENT INFORMATION
+// =====================================================
+
+app.get("/api/upi", (req, res) => {
+
+  res.json({
+
+    success: true,
+
+    merchant: "JP Mishra",
+
+    upiId: BRAND.upiId,
+
+    qrCode: BRAND.qrCodeUrl,
+
+    packages: PACKS,
+
+    links: {
+
+      "19":
+        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=19&cu=INR`,
+
+      "49":
+        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=49&cu=INR`,
+
+      "99":
+        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=99&cu=INR`,
+
+      "199":
+        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=199&cu=INR`
+
+    }
+
+  });
+
+});
+
+// =====================================================
+// DEMO UPI PAYMENT CONFIRMATION
+// =====================================================
+// IMPORTANT:
+// यह केवल DEMO है।
+// Real automatic payment verification के लिए Razorpay
+// या verified payment gateway लगाना जरूरी है.
+// =====================================================
+
+app.post("/api/upi/demo-confirm", (req, res) => {
+
+  const {
+    userId = "demo-user",
+    amount
+  } = req.body;
+
+  const pack = PACKS[Number(amount)];
+
+  if (!pack) {
+
+    return res.status(400).json({
+
+      success: false,
+
+      error: "Invalid payment amount"
+
+    });
+
+  }
+
+  const user = createUser(userId);
+
+  user.points += pack.points;
+
+  res.json({
+
+    success: true,
+
+    demo: true,
+
+    amount: pack.amount,
+
+    addedPoints: pack.points,
+
+    totalPoints: user.points,
+
+    message:
+      "Demo payment confirmed. Production में server-side verification लगाएँ।"
+
+  });
+
+});
+
+// =====================================================
+// TEXT → REEL
+// =====================================================
+
+app.post("/generate", async (req, res) => {
+
+  try {
+
+    const {
+
+      prompt,
+
+      topic,
+
+      language = "Hindi",
+
+      voice = "hi-IN-MadhurNeural",
+
+      aspect_ratio = "9:16",
+
+      duration = 30,
+
+      category = "General",
+
+      watermark = "JP Mishra Digital",
+
+      captions = true,
+
+      music = true
+
+    } = req.body;
+
+    const finalTopic =
+      (prompt || topic || "").trim();
+
+    if (!finalTopic) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        error:
+          "कृपया रील का विषय लिखें।"
+
+      });
+
+    }
+
+    const userId =
+      req.body.userId || "demo-user";
+
+    const user = createUser(userId);
+
+    // Reel generation cost
+    const COST = 10;
+
+    if (user.points < COST) {
+
+      return res.status(402).json({
+
+        success: false,
+
+        error:
+          "पर्याप्त Points नहीं हैं।",
+
+        points: user.points,
+
+        required: COST
+
+      });
+
+    }
+
+    user.points -= COST;
+
+    user.totalCreated += 1;
+
+    console.log("🎬 Reel Request");
+    console.log("User:", userId);
+    console.log("Topic:", finalTopic);
+    console.log("Language:", language);
+    console.log("Voice:", voice);
+    console.log("Aspect:", aspect_ratio);
+    console.log("Duration:", duration);
+
+    // =================================================
+    // DEMO SCRIPT
+    // =================================================
+
+    const script = `
+
+नमस्कार दोस्तों! 🙏
+
+आज हम बात करेंगे —
+${finalTopic}
+
+इस विषय को आसान,
+रोचक और उपयोगी तरीके से समझिए।
+
+अगर आपको यह Reel पसंद आए
+तो Like करें,
+Follow करें
+और अपने दोस्तों के साथ Share करें।
+
+धन्यवाद! ❤️
+
+JP Mishra Digital
+
+`;
+
+    // =================================================
+    // DEMO VIDEO
+    // =================================================
+    // Real AI engine आने पर यही URL replace होगा.
+
+    const video_url =
+      "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
+    res.json({
+
+      success: true,
+
+      mode: "text-to-reel",
+
+      title: finalTopic,
+
+      script: script.trim(),
+
+      video_url,
+
+      language,
+
+      voice,
+
+      aspect_ratio,
+
+      duration,
+
+      category,
+
+      captions,
+
+      music,
+
+      watermark:
+        watermark || BRAND.watermark,
+
+      pointsUsed: COST,
+
+      remainingPoints:
+        user.points,
+
+      creator:
+        BRAND.creator,
+
+      share: {
+
+        whatsapp:
+          `https://wa.me/?text=${encodeURIComponent(
+            "देखिए मेरी Reel — ReelMitra.Ai • JP Mishra Digital"
+          )}`,
+
+        facebook:
+          "https://www.facebook.com/sharer/sharer.php?u=" +
+          encodeURIComponent(video_url),
+
+        telegram:
+          "https://t.me/share/url?url=" +
+          encodeURIComponent(video_url),
+
+        copyLink:
+          video_url
+
+      },
+
+      message:
+        "🎉 Demo Reel तैयार है!"
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "❌ Generate Error:",
+      error
+    );
+
+    res.status(500).json({
+
+      success: false,
+
+      error:
+        "रील तैयार करते समय सर्वर में समस्या हुई।"
+
+    });
+
+  }
+
+});
+
+// =====================================================
+// PHOTO → VIDEO
+// =====================================================
+// Frontend Base64 photo भेज सकता है.
+// अभी demo pipeline है.
+// बाद में AI video engine इसी endpoint से जुड़ेगा.
+// =====================================================
+
+app.post("/api/photo-to-video", async (req, res) => {
+
+  try {
+
+    const {
+
+      userId = "demo-user",
+
+      image,
+
+      prompt = "इस फोटो को cinematic short reel में animate करें",
+
+      language = "Hindi",
+
+      voice = "hi-IN-MadhurNeural",
+
+      duration = 15,
+
+      aspect_ratio = "9:16",
+
+      motion = "cinematic",
+
+      captions = true,
+
+      music = true
+
+    } = req.body;
+
+    if (!image) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        error:
+          "कृपया Photo upload करें।"
+
+      });
+
+    }
+
+    const user = createUser(userId);
+
+    const COST = 20;
+
+    if (user.points < COST) {
+
+      return res.status(402).json({
+
+        success: false,
+
+        error:
+          "Photo → Video के लिए 20 Points चाहिए।",
+
+        points: user.points
+
+      });
+
+    }
+
+    user.points -= COST;
+
+    user.totalCreated += 1;
+
+    console.log("📸 Photo → Video Request");
+
+    console.log("User:", userId);
+
+    console.log("Prompt:", prompt);
+
+    console.log("Motion:", motion);
+
+    // =================================================
+    // IMPORTANT
+    // अभी वास्तविक AI video engine नहीं लगाया गया है.
+    // =================================================
+
+    const video_url =
+      "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
+    res.json({
+
+      success: true,
+
+      mode: "photo-to-video",
+
+      photoReceived: true,
+
+      title: "JP Mishra Photo Reel",
+
+      video_url,
+
+      prompt,
+
+      language,
+
+      voice,
+
+      duration,
+
+      aspect_ratio,
+
+      motion,
+
+      captions,
+
+      music,
+
+      watermark:
+        BRAND.watermark,
+
+      pointsUsed: COST,
+
+      remainingPoints:
+        user.points,
+
+      creator:
+        BRAND.creator,
+
+      message:
+        "📸 Photo received! Demo video returned. Real AI animation engine next."
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "❌ Photo Video Error:",
+      error
+    );
+
+    res.status(500).json({
+
+      success: false,
+
+      error:
+        "Photo processing में समस्या हुई।"
+
+    });
+
+  }
+
+});
+
+// =====================================================
+// ADVANCED FEATURES
+// =====================================================
+
+app.get("/api/features", (req, res) => {
+
+  res.json({
+
+    success: true,
+
+    features: [
+
+      {
+        id: "photo-video",
+        name: "📸 Photo → Video",
+        cost: 20
+      },
+
+      {
+        id: "text-reel",
+        name: "✍️ Text → Reel",
+        cost: 10
+      },
+
+      {
+        id: "ai-script",
+        name: "🧠 AI Script"
+      },
+
+      {
+        id: "ai-voice",
+        name: "🎙️ AI Voice"
+      },
+
+      {
+        id: "captions",
+        name: "📝 Auto Captions"
+      },
+
+      {
+        id: "music",
+        name: "🎵 Background Music"
+      },
+
+      {
+        id: "templates",
+        name: "🎨 Premium Templates"
+      },
+
+      {
+        id: "9x16",
+        name: "📱 9:16 Shorts/Reels"
+      },
+
+      {
+        id: "watermark",
+        name: "🏷️ Custom Watermark"
+      },
+
+      {
+        id: "social",
+        name: "📤 Social Sharing"
+      },
+
+      {
+        id: "whatsapp",
+        name: "💬 WhatsApp Sharing"
+      },
+
+      {
+        id: "referral",
+        name: "🎁 Referral Rewards"
+      }
+
+    ]
+
+  });
+
+});
+
+// =====================================================
+// SOCIAL SHARE
+// =====================================================
+
+app.post("/api/share", (req, res) => {
+
+  const {
+
+    platform = "whatsapp",
+
+    url = "https://jpmtop1.github.io/ReelMitra.Ai/"
+
+  } = req.body;
+
+  const encoded =
+    encodeURIComponent(url);
+
+  let shareUrl = "";
+
+  if (platform === "whatsapp") {
+
+    shareUrl =
+      "https://wa.me/?text=" +
+      encodeURIComponent(
+        "🎬 मेरी Reel देखें — ReelMitra.Ai • JP Mishra Digital\n" +
+        url
+      );
+
+  } else if (platform === "facebook") {
+
+    shareUrl =
+      "https://www.facebook.com/sharer/sharer.php?u=" +
+      encoded;
+
+  } else if (platform === "telegram") {
+
+    shareUrl =
+      "https://t.me/share/url?url=" +
+      encoded;
+
+  } else if (platform === "x") {
+
+    shareUrl =
+      "https://twitter.com/intent/tweet?url=" +
+      encoded;
+
+  } else {
+
+    shareUrl = url;
+
+  }
+
+  res.json({
+
+    success: true,
+
+    platform,
+
+    shareUrl
+
+  });
+
+});
+
+// =====================================================
+// REFERRAL SHARE LINK
+// =====================================================
+
+app.get("/api/referral", (req, res) => {
+
+  const user =
+    createUser(
+      req.query.userId || "demo-user"
+    );
+
+  const appUrl =
+    "https://jpmtop1.github.io/ReelMitra.Ai/";
+
+  const referralLink =
+    `${appUrl}?ref=${user.referralCode}`;
+
+  res.json({
+
+    success: true,
+
+    referralCode:
+      user.referralCode,
+
+    referralLink,
+
+    reward:
+      "दोस्त को जोड़ने पर 25 Points"
+
+  });
+
+});
+
+// =====================================================
+// SERVER
+// =====================================================
+
+app.listen(PORT, () => {
+
+  console.log(
+    `🚀 ReelMitra.Ai Pro Server running on port ${PORT}`
+  );
+
+  console.log(
+    `💳 UPI: ${BRAND.upiId}`
+  );
+
+  console.log(
+    `👨‍💻 Creator: ${BRAND.creator}`
+  );
+
+});
