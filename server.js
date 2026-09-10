@@ -28,7 +28,7 @@
     <!-- Main Container -->
     <main class="w-full max-w-md p-4 flex flex-col space-y-4">
         
-        <!-- Tabs for Text-to-Reel / Photo-to-Video -->
+        <!-- Tabs -->
         <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
             <button onclick="switchTab('text')" id="tabText" class="flex-1 py-2 text-xs font-bold rounded-lg bg-purple-600 text-white transition">✍️ Text to Reel</button>
             <button onclick="switchTab('photo')" id="tabPhoto" class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition">📸 Photo to Video</button>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        label class="block text-xs font-medium text-slate-300 mb-1">वॉइस भाषा</label>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">वॉइस भाषा</label>
                         <select id="voiceSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none">
                             <option value="hi-IN-MadhurNeural">हिंदी (पुरुष - Madhur)</option>
                             <option value="hi-IN-SwaraNeural">हिंदी (महिला - Swara)</option>
@@ -196,7 +196,6 @@
             }
         }
 
-        // Text to Reel Handler
         document.getElementById('reelForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(currentPoints < 10) {
@@ -208,7 +207,6 @@
             processGeneration("🎬 AI स्क्रिप्ट और वॉयसओवर तैयार हो रहा है...");
         });
 
-        // Photo to Video Handler
         function handlePhotoToVideo() {
             const fileInput = document.getElementById('photoFile');
             if(fileInput.files.length === 0) {
