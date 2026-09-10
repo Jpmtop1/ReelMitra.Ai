@@ -1,270 +1,172 @@
 <!DOCTYPE html>
-<html lang="hi" class="dark">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelMitra.Ai Pro - JP Mishra Digital</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-between font-sans pb-10">
-
-    <!-- Header -->
-    <header class="w-full max-w-md p-4 flex justify-between items-center border-b border-slate-800">
-        <div class="flex items-center space-x-2">
-            <div class="bg-gradient-to-r from-purple-600 to-pink-500 p-2.5 rounded-xl shadow-lg">
-                <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
-            </div>
-            <div>
-                <h1 class="text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">ReelMitra.Ai Pro</h1>
-                <p class="text-[10px] text-slate-400">JP Mishra Digital Studio</p>
-            </div>
-        </div>
-        <div onclick="openRechargeModal()" class="cursor-pointer bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-full flex items-center space-x-1.5 shadow-md">
-            <span class="text-amber-400 font-bold text-xs">🪙 <span id="userPoints">150</span> Pts</span>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="w-full max-w-md p-4 flex flex-col space-y-4">
+    <title>ReelMitra.AI - Autonomous AI Reel Studio</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #ec4899;
+            --secondary: #8b5cf6;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
-        <!-- Tabs -->
-        <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
-            <button onclick="switchTab('text')" id="tabText" class="flex-1 py-2 text-xs font-bold rounded-lg bg-purple-600 text-white transition">✍️ Text to Reel</button>
-            <button onclick="switchTab('photo')" id="tabPhoto" class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition">📸 Photo to Video</button>
-        </div>
+        .header { width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .logo-text h1 { font-size: 16px; font-weight: bold; background: linear-gradient(to right, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-text p { font-size: 11px; color: var(--text-muted); }
 
-        <!-- Text to Reel Form -->
-        <div id="sectionText" class="bg-slate-900/80 backdrop-blur border border-slate-800 p-5 rounded-2xl shadow-xl space-y-4">
-            <h2 class="text-sm font-semibold text-purple-300">✍️ टेक्स्ट से वायरल AI रील बनाएँ</h2>
-            <form id="reelForm" class="space-y-3">
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">रील का टॉपिक या प्रॉम्प्ट</label>
-                    <textarea id="promptInput" rows="3" required placeholder="उदा: हनुमान जी के 12 नाम, मोटिवेशनल विचार..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">वॉइस भाषा</label>
-                        <select id="voiceSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none">
-                            <option value="hi-IN-MadhurNeural">हिंदी (पुरुष - Madhur)</option>
-                            <option value="hi-IN-SwaraNeural">हिंदी (महिला - Swara)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">फ़ॉर्मेट (Aspect)</label>
-                        <select id="aspectSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none">
-                            <option value="9:16">9:16 (Shorts/Reels)</option>
-                            <option value="1:1">1:1 (Square Post)</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <span>Generate AI Reel (10 Pts)</span>
-                </button>
-            </form>
-        </div>
+        .coin-badge { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; color: var(--accent); cursor: pointer; }
 
-        <!-- Photo to Video Form -->
-        <div id="sectionPhoto" class="bg-slate-900/80 backdrop-blur border border-slate-800 p-5 rounded-2xl shadow-xl space-y-4 hidden">
-            <h2 class="text-sm font-semibold text-pink-400">📸 फोटो से सिनेमैटिक वीडियो बनाएँ</h2>
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">अपनी फोटो अपलोड करें</label>
-                    <input type="file" id="photoFile" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">एनीमेशन प्रॉम्प्ट</label>
-                    <input type="text" id="photoPrompt" placeholder="उदा: Cinematic 3D motion effect..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-pink-500">
-                </div>
-                <button onclick="handlePhotoToVideo()" id="photoSubmitBtn" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 py-3 rounded-xl font-bold text-sm shadow-lg">
-                    ✨ Animate Photo to Video (20 Pts)
-                </button>
+        .container { width: 100%; max-width: 480px; background: var(--card-bg); padding: 22px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        
+        h2 { font-size: 18px; text-align: center; margin-bottom: 6px; }
+        .subtitle { font-size: 12px; text-align: center; color: var(--text-muted); margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted); font-weight: 500; }
+        textarea, select, input[type="file"] { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 14px; outline: none; }
+        textarea:focus, select:focus { border-color: var(--primary); }
+        textarea { resize: none; height: 90px; }
+
+        .file-upload-box { border: 2px dashed #334155; padding: 15px; text-align: center; border-radius: 10px; cursor: pointer; background: #0f172a; font-size: 13px; color: var(--text-muted); }
+        .file-upload-box:hover { border-color: var(--primary); color: white; }
+
+        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 10px; color: white; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        #loader { display: none; text-align: center; margin-top: 20px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #334155; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #resultSection { display: none; margin-top: 20px; text-align: center; }
+        .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .watermark-overlay { position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 6px; font-size: 11px; color: white; }
+
+        .footer { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: auto; padding: 10px; }
+        .footer span { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-area">
+            <div class="logo-icon">🚀</div>
+            <div class="logo-text">
+                <h1>ReelMitra.AI</h1>
+                <p>JP Mishra Digital Studio</p>
             </div>
         </div>
+        <div class="coin-badge" id="coinCount" onclick="alert('पॉइंट्स जोड़ने के लिए रीचार्ज करें!')">🪙 30 पॉइंट्स</div>
+    </div>
 
-        <!-- Loading Box -->
-        <div id="loadingBox" class="hidden text-center space-y-3 py-6 bg-slate-900/50 rounded-2xl border border-slate-800">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
-            <p id="loadingStatus" class="text-xs text-slate-300 animate-pulse">AI स्क्रिप्ट और वीडियो तैयार हो रहा है...</p>
+    <div class="container">
+        <h2>ऑटोनॉमस AI रील स्टूडियो</h2>
+        <p class="subtitle">1 मिनट+ लंबी एंगेजिंग वीडियो, कस्टम फोटो और आवाज़ (Audio) के साथ!</p>
+
+        <div class="form-group">
+            <label>रील का टॉपिक या स्क्रिप्ट प्रॉम्प्ट</label>
+            <textarea id="reelTopic" placeholder="यहाँ अपना टॉपिक लिखें (जैसे: हनुमान जी के 12 नाम)..."></textarea>
         </div>
 
-        <!-- Result Section -->
-        <div id="resultBox" class="hidden bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-4 shadow-xl">
-            <div class="flex items-center justify-between text-green-400 text-xs font-semibold">
-                <span><i class="fa-solid fa-circle-check mr-1"></i> रील सफलतापूर्वक तैयार हो गई!</span>
+        <div class="form-group">
+            <label>अपनी फोटो या ब्रांड लोगो अपलोड करें (Optional)</label>
+            <div class="file-upload-box" onclick="document.getElementById('imageInput').click()">
+                📁 <span id="fileName">यहाँ क्लिक करके अपनी फोटो/लोगो चुनें</span>
             </div>
-            
-            <div class="relative w-full aspect-[9/16] max-h-[350px] bg-black rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
-                <video id="videoPreview" controls class="w-full h-full object-cover"></video>
-            </div>
-
-            <!-- Action & Sharing Buttons -->
-            <div class="grid grid-cols-2 gap-2">
-                <a id="downloadBtn" href="#" download="reelmitra_ai.mp4" class="bg-emerald-600 hover:bg-emerald-500 py-2.5 px-3 rounded-xl text-xs font-bold text-center flex items-center justify-center space-x-1.5 shadow">
-                    <i class="fa-solid fa-download"></i>
-                    <span>डाउनलोड करें</span>
-                </a>
-                <button onclick="shareWhatsApp()" class="bg-green-600 hover:bg-green-500 py-2.5 px-3 rounded-xl text-xs font-bold text-center flex items-center justify-center space-x-1.5 shadow">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>WhatsApp शेयर</span>
-                </button>
-            </div>
-
-            <!-- Social Links Connectivity -->
-            <div class="pt-2 border-t border-slate-800 flex justify-between gap-2">
-                <a href="https://studio.youtube.com" target="_blank" class="flex-1 bg-red-600/20 border border-red-500/30 text-red-400 py-2 rounded-lg text-[11px] font-bold text-center flex items-center justify-center gap-1">
-                    <i class="fa-brands fa-youtube"></i> YT Studio
-                </a>
-                <a href="https://www.facebook.com" target="_blank" class="flex-1 bg-blue-600/20 border border-blue-500/30 text-blue-400 py-2 rounded-lg text-[11px] font-bold text-center flex items-center justify-center gap-1">
-                    <i class="fa-brands fa-facebook"></i> Facebook
-                </a>
-                <a href="https://www.instagram.com" target="_blank" class="flex-1 bg-pink-600/20 border border-pink-500/30 text-pink-400 py-2 rounded-lg text-[11px] font-bold text-center flex items-center justify-center gap-1">
-                    <i class="fa-brands fa-instagram"></i> Insta
-                </a>
-            </div>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
         </div>
 
-    </main>
+        <div class="form-group">
+            <label>वॉइस स्टाइल और भाषा (Audio Voice)</label>
+            <select id="voiceStyle">
+                <option value="hindi-deep">हिंदी (Cinematic Deep Voice - HD)</option>
+                <option value="hindi-madhur">हिंदी (Madhur Voice - Sweet)</option>
+                <option value="hindi-energetic">हिंदी (High Energy / Fast Paced)</option>
+            </select>
+        </div>
 
-    <!-- Recharge Modal -->
-    <div id="rechargeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-sm text-purple-300">⚡ पॉइंट्स रिचार्ज प्लान</h3>
-                <button onclick="closeRechargeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2.5">
-                <div onclick="selectPack(19, 100)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
-                    <div class="text-base font-extrabold text-purple-400">₹19</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">100 Points</div>
-                </div>
-                <div onclick="selectPack(49, 300)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
-                    <div class="text-base font-extrabold text-purple-400">₹49</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">300 Points</div>
-                </div>
-                <div onclick="selectPack(99, 700)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
-                    <div class="text-base font-extrabold text-purple-400">₹99</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">700 Points</div>
-                </div>
-                <div onclick="selectPack(149, 1100)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
-                    <div class="text-base font-extrabold text-purple-400">₹149</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">1100 Points</div>
-                </div>
-                <div onclick="selectPack(199, 1500)" class="col-span-2 bg-slate-950 border border-purple-500/50 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center bg-purple-950/20">
-                    <div class="text-base font-extrabold text-pink-400">₹199 (Ultimate Creator Pack)</div>
-                    <div class="text-[10px] text-amber-400 mt-0.5">1500 Points + VIP Badge</div>
-                </div>
-            </div>
+        <button class="btn" onclick="generateReel()">✨ Generate 1-Min Pro AI Reel (10 पॉइंट्स)</button>
 
-            <div id="upiPaymentBox" class="hidden text-center space-y-3 pt-2 border-t border-slate-800">
-                <p id="upiInfoText" class="text-xs font-semibold text-slate-300"></p>
-                <a id="upiPayLink" href="#" class="block bg-purple-600 hover:bg-purple-500 text-white py-2.5 rounded-xl font-bold text-xs">UPI App से भुगतान करें</a>
-                <button onclick="confirmPayment()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2 rounded-xl text-xs font-bold text-white">मैंने भुगतान कर दिया है (पॉइंट्स जोड़ें)</button>
+        <div id="loader">
+            <div class="spinner"></div>
+            <p id="loaderText" style="font-size: 13px; color: var(--text-muted);">AI स्क्रिप्ट और वॉइसओवर तैयार हो रही है...</p>
+        </div>
+
+        <div id="resultSection">
+            <p style="color: var(--accent); font-weight: bold; margin-bottom: 10px;">✅ आपकी कस्टम AI रील आवाज़ के साथ तैयार है!</p>
+            <div class="video-container">
+                <!-- यहाँ आपकी वीडियो और ऑडियो लोड होगी -->
+                <video id="outputVideo" controls autoplay muted>
+                    <source src="" type="video/mp4">
+                    आपका ब्राउज़र वीडियो टैग को सपोर्ट नहीं करता।
+                </video>
+                <div class="watermark-overlay">⚡ ReelMitra.AI | JP Mishra Digital</div>
             </div>
+            <button class="btn" style="background: var(--accent);" onclick="alert('रील डाउनलोड हो रही है!')">📥 एचडी रील डाउनलोड करें</button>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="text-center text-[10px] text-slate-500 mt-6">
-        © 2026 ReelMitra.Ai Pro • Developed with ❤️ by JP Mishra Digital
-    </footer>
+    <div class="footer">
+        © 2026 ReelMitra.AI • Developed with ❤️ by <span>JP Mishra Digital</span>
+    </div>
 
     <script>
-        let currentPoints = parseInt(localStorage.getItem('jp_points')) || 150;
-        let pendingPointsToAdd = 0;
-        document.getElementById('userPoints').innerText = currentPoints;
+        let userCredits = 30;
 
-        function updatePoints(pts) {
-            currentPoints = pts;
-            document.getElementById('userPoints').innerText = currentPoints;
-            localStorage.setItem('jp_points', currentPoints);
-        }
-
-        function switchTab(type) {
-            if(type === 'text') {
-                document.getElementById('sectionText').classList.remove('hidden');
-                document.getElementById('sectionPhoto').classList.add('hidden');
-                document.getElementById('tabText').className = "flex-1 py-2 text-xs font-bold rounded-lg bg-purple-600 text-white transition";
-                document.getElementById('tabPhoto').className = "flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition";
-            } else {
-                document.getElementById('sectionPhoto').classList.remove('hidden');
-                document.getElementById('sectionText').classList.add('hidden');
-                document.getElementById('tabPhoto').className = "flex-1 py-2 text-xs font-bold rounded-lg bg-pink-600 text-white transition";
-                document.getElementById('tabText').className = "flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition";
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('fileName').innerText = file.name;
             }
         }
 
-        document.getElementById('reelForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if(currentPoints < 10) {
-                alert("पॉइंट्स खत्म हो गए हैं! कृपया रिचार्ज करें।");
-                openRechargeModal();
+        function generateReel() {
+            const topic = document.getElementById('reelTopic').value.trim();
+            if (!topic) {
+                alert('कृपया पहले रील का कोई टॉपिक लिखें!');
                 return;
             }
-            updatePoints(currentPoints - 10);
-            processGeneration("🎬 AI स्क्रिप्ट और वॉयसओवर तैयार हो रहा है...");
-        });
 
-        function handlePhotoToVideo() {
-            const fileInput = document.getElementById('photoFile');
-            if(fileInput.files.length === 0) {
-                alert("कृपया पहले अपनी फोटो चुनें!");
+            if (userCredits < 10) {
+                alert('आपके पॉइंट्स कम हो गए हैं! रील बनाने के लिए कम से कम 10 पॉइंट्स चाहिए।');
                 return;
             }
-            if(currentPoints < 20) {
-                alert("Photo-to-Video के लिए 20 पॉइंट्स चाहिए। कृपया रिचार्ज करें।");
-                openRechargeModal();
-                return;
-            }
-            updatePoints(currentPoints - 20);
-            processGeneration("📸 फोटो को सिनेमैटिक AI वीडियो में बदला जा रहा है...");
-        }
 
-        function processGeneration(statusText) {
-            document.getElementById('loadingBox').classList.remove('hidden');
-            document.getElementById('resultBox').classList.add('hidden');
-            document.getElementById('loadingStatus').innerText = statusText;
+            userCredits -= 10;
+            document.getElementById('coinCount').innerText = `🪙 ${userCredits} पॉइंट्स`;
 
-            setTimeout(() => {
-                document.getElementById('loadingBox').classList.add('hidden');
-                const videoEl = document.getElementById('videoPreview');
-                videoEl.src = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
-                videoEl.load();
-                document.getElementById('resultBox').classList.remove('hidden');
-                videoEl.play().catch(e => console.log("Autoplay restricted"));
-            }, 2500);
-        }
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
 
-        function shareWhatsApp() {
-            const text = "🎬 मैंने ReelMitra.Ai Pro (JP Mishra Digital) से यह शानदार AI रील बनाई है! आप भी बनाएं:";
-            window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + window.location.href)}`, '_blank');
-        }
+            let progress = 0;
+            let loaderText = document.getElementById('loaderText');
 
-        function openRechargeModal() {
-            document.getElementById('rechargeModal').classList.remove('hidden');
-            document.getElementById('upiPaymentBox').classList.add('hidden');
-        }
-
-        function closeRechargeModal() {
-            document.getElementById('rechargeModal').classList.add('hidden');
-        }
-
-        function selectPack(amount, points) {
-            pendingPointsToAdd = points;
-            const upiId = "jpm786064-1@okhdfcbank";
-            const upiUrl = `upi://pay?pa=${upiId}&pn=JP%20Mishra&am=${amount}&cu=INR&tn=ReelMitra%20${points}%20Points`;
-            
-            document.getElementById('upiInfoText').innerText = `₹${amount} भुगतान करने के लिए क्लिक करें (${points} पॉइंट्स मिलेंगे)`;
-            document.getElementById('upiPayLink').href = upiUrl;
-            document.getElementById('upiPaymentBox').classList.remove('hidden');
-        }
-
-        function confirmPayment() {
-            updatePoints(currentPoints + pendingPointsToAdd);
-            alert(`🎉 भुगतान सफल! ${pendingPointsToAdd} पॉइंट्स आपके खाते में जोड़ दिए गए हैं।`);
-            closeRechargeModal();
+            const interval = setInterval(() => {
+                progress += 25;
+                if (progress === 25) loaderText.innerText = '📝 AI स्क्रिप्ट तैयार हो रही है (25%)...';
+                if (progress === 50) loaderText.innerText = '🎙️ एचडी वॉइसओवर और ऑडियो सिंक हो रहा है (50%)...';
+                if (progress === 75) loaderText.innerText = '🎬 इमेज और वीडियो एनिमेशन प्रोसेस हो रहा है (75%)...';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('resultSection').style.display = 'block';
+                    
+                    // यहाँ डिफ़ॉल्ट या जनरेटेड वीडियो का लिंक सेट करें जिसमें ऑडियो हो
+                    const videoElem = document.getElementById('outputVideo');
+                    videoElem.src = "https://www.w3schools.com/html/mov_bbb.mp4"; // डेमो वीडियो लिंक
+                    videoElem.muted = false; // आवाज़ इनेबल करने के लिए
+                }
+            }, 1000);
         }
     </script>
 </body>
