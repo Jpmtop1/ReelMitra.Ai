@@ -1,1034 +1,271 @@
-const express = require("express");
-const cors = require("cors");
-
-const app = express();
-const PORT = process.env.PORT || 10000;
-
-// =====================================================
-// REELMITRA.AI PRO
-// JP Mishra Digital
-// =====================================================
-
-// -----------------------------
-// CORS
-// -----------------------------
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
-}));
-
-// Photo/Base64 upload के लिए limit
-app.use(express.json({ limit: "25mb" }));
-app.use(express.urlencoded({ extended: true, limit: "25mb" }));
-
-// =====================================================
-// BRAND SETTINGS
-// =====================================================
-
-const BRAND = {
-  name: "ReelMitra.Ai Pro",
-  creator: "JP Mishra Digital",
-  watermark: "Created with ReelMitra.Ai • JP Mishra Digital",
-
-  upiId: "jpm786064-1@okhdfcbank",
-
-  // QR image को frontend/public/assets/upi-qr.jpg में रखें
-  qrCodeUrl:
-    "https://jpmtop1.github.io/ReelMitra.Ai/assets/upi-qr.jpg"
-};
-
-// =====================================================
-// POINT PACKS
-// =====================================================
-
-const PACKS = {
-  19: {
-    amount: 19,
-    points: 100,
-    name: "Creator Pack"
-  },
-
-  49: {
-    amount: 49,
-    points: 300,
-    name: "Pro Pack"
-  },
-
-  99: {
-    amount: 99,
-    points: 700,
-    name: "Super Creator"
-  },
-
-  199: {
-    amount: 199,
-    points: 1500,
-    name: "Ultimate Creator"
-  }
-};
-
-// =====================================================
-// DEMO USER DATABASE
-// Production में Supabase database लगाएँ
-// =====================================================
-
-const users = new Map();
-
-function createUser(userId) {
-
-  if (!userId) {
-    userId = "demo-user";
-  }
-
-  if (!users.has(userId)) {
-
-    users.set(userId, {
-      userId,
-      name: "JP Mishra",
-      points: 150,
-      referralCode:
-        "JP" +
-        Math.random()
-          .toString(36)
-          .substring(2, 8)
-          .toUpperCase(),
-
-      referredBy: null,
-      referralCount: 0,
-      totalCreated: 0,
-
-      plan: "Free",
-
-      createdAt: new Date().toISOString()
-    });
-
-  }
-
-  return users.get(userId);
-}
-
-// =====================================================
-// HOME / HEALTH CHECK
-// =====================================================
-
-app.get("/", (req, res) => {
-
-  res.json({
-
-    success: true,
-
-    app: BRAND.name,
-
-    message:
-      "ReelMitra.Ai Pro Backend is Running Live! 🚀",
-
-    creator: BRAND.creator,
-
-    features: [
-      "Text to Reel",
-      "Photo to Video",
-      "AI Script",
-      "AI Voice",
-      "9:16 Reel",
-      "Points",
-      "Referral",
-      "UPI Payment",
-      "QR Payment",
-      "Social Sharing",
-      "WhatsApp Sharing",
-      "Advanced Creator Tools"
-    ]
-
-  });
-
-});
-
-// =====================================================
-// APP CONFIG
-// =====================================================
-
-app.get("/api/config", (req, res) => {
-
-  res.json({
-
-    success: true,
-
-    appName: BRAND.name,
-
-    creator: BRAND.creator,
-
-    watermark: BRAND.watermark,
-
-    upi: {
-
-      id: BRAND.upiId,
-
-      name: "JP Mishra",
-
-      qrCode: BRAND.qrCodeUrl,
-
-      payLinks: {
-
-        rs19:
-          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=19&cu=INR`,
-
-        rs49:
-          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=49&cu=INR`,
-
-        rs99:
-          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=99&cu=INR`,
-
-        rs199:
-          `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=199&cu=INR`
-
-      }
-
-    },
-
-    packs: PACKS
-
-  });
-
-});
-
-// =====================================================
-// WALLET / POINTS
-// =====================================================
-
-app.get("/api/wallet", (req, res) => {
-
-  const user = createUser(
-    req.query.userId || "demo-user"
-  );
-
-  res.json({
-
-    success: true,
-
-    userId: user.userId,
-
-    name: user.name,
-
-    points: user.points,
-
-    plan: user.plan,
-
-    referralCode: user.referralCode,
-
-    referralCount: user.referralCount,
-
-    totalCreated: user.totalCreated
-
-  });
-
-});
-
-// =====================================================
-// DAILY BONUS
-// =====================================================
-
-const dailyBonus = new Map();
-
-app.post("/api/daily-bonus", (req, res) => {
-
-  const userId = req.body.userId || "demo-user";
-
-  const user = createUser(userId);
-
-  const today =
-    new Date().toISOString().slice(0, 10);
-
-  const key = `${userId}-${today}`;
-
-  if (dailyBonus.has(key)) {
-
-    return res.status(409).json({
-
-      success: false,
-
-      error: "आज का Daily Bonus पहले ही लिया जा चुका है।",
-
-      points: user.points
-
-    });
-
-  }
-
-  user.points += 10;
-
-  dailyBonus.set(key, true);
-
-  res.json({
-
-    success: true,
-
-    bonus: 10,
-
-    points: user.points,
-
-    message:
-      "🎁 आज के 10 Bonus Points मिल गए!"
-
-  });
-
-});
-
-// =====================================================
-// REFERRAL SYSTEM
-// =====================================================
-
-app.post("/api/referral/apply", (req, res) => {
-
-  const {
-    userId = "demo-user",
-    referralCode
-  } = req.body;
-
-  const user = createUser(userId);
-
-  if (!referralCode) {
-
-    return res.status(400).json({
-
-      success: false,
-
-      error: "Referral Code जरूरी है।"
-
-    });
-
-  }
-
-  if (user.referredBy) {
-
-    return res.status(409).json({
-
-      success: false,
-
-      error: "आप पहले ही referral इस्तेमाल कर चुके हैं।",
-
-      points: user.points
-
-    });
-
-  }
-
-  let referrer = null;
-
-  for (const u of users.values()) {
-
-    if (
-      u.referralCode.toUpperCase() ===
-      referralCode.toUpperCase()
-    ) {
-
-      referrer = u;
-      break;
-
-    }
-
-  }
-
-  if (!referrer) {
-
-    return res.status(404).json({
-
-      success: false,
-
-      error: "Invalid Referral Code"
-
-    });
-
-  }
-
-  if (referrer.userId === user.userId) {
-
-    return res.status(400).json({
-
-      success: false,
-
-      error: "अपना Referral Code इस्तेमाल नहीं कर सकते।"
-
-    });
-
-  }
-
-  // दोनों को bonus
-  user.points += 25;
-
-  referrer.points += 25;
-
-  referrer.referralCount += 1;
-
-  user.referredBy = referrer.referralCode;
-
-  res.json({
-
-    success: true,
-
-    bonus: 25,
-
-    points: user.points,
-
-    message:
-      "🎁 Referral सफल! आपको 25 Points मिले।"
-
-  });
-
-});
-
-// =====================================================
-// POINT PACK LIST
-// =====================================================
-
-app.get("/api/packs", (req, res) => {
-
-  res.json({
-
-    success: true,
-
-    packs: PACKS
-
-  });
-
-});
-
-// =====================================================
-// UPI PAYMENT INFORMATION
-// =====================================================
-
-app.get("/api/upi", (req, res) => {
-
-  res.json({
-
-    success: true,
-
-    merchant: "JP Mishra",
-
-    upiId: BRAND.upiId,
-
-    qrCode: BRAND.qrCodeUrl,
-
-    packages: PACKS,
-
-    links: {
-
-      "19":
-        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=19&cu=INR`,
-
-      "49":
-        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=49&cu=INR`,
-
-      "99":
-        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=99&cu=INR`,
-
-      "199":
-        `upi://pay?pa=${BRAND.upiId}&pn=JP%20Mishra&am=199&cu=INR`
-
-    }
-
-  });
-
-});
-
-// =====================================================
-// DEMO UPI PAYMENT CONFIRMATION
-// =====================================================
-// IMPORTANT:
-// यह केवल DEMO है।
-// Real automatic payment verification के लिए Razorpay
-// या verified payment gateway लगाना जरूरी है.
-// =====================================================
-
-app.post("/api/upi/demo-confirm", (req, res) => {
-
-  const {
-    userId = "demo-user",
-    amount
-  } = req.body;
-
-  const pack = PACKS[Number(amount)];
-
-  if (!pack) {
-
-    return res.status(400).json({
-
-      success: false,
-
-      error: "Invalid payment amount"
-
-    });
-
-  }
-
-  const user = createUser(userId);
-
-  user.points += pack.points;
-
-  res.json({
-
-    success: true,
-
-    demo: true,
-
-    amount: pack.amount,
-
-    addedPoints: pack.points,
-
-    totalPoints: user.points,
-
-    message:
-      "Demo payment confirmed. Production में server-side verification लगाएँ।"
-
-  });
-
-});
-
-// =====================================================
-// TEXT → REEL
-// =====================================================
-
-app.post("/generate", async (req, res) => {
-
-  try {
-
-    const {
-
-      prompt,
-
-      topic,
-
-      language = "Hindi",
-
-      voice = "hi-IN-MadhurNeural",
-
-      aspect_ratio = "9:16",
-
-      duration = 30,
-
-      category = "General",
-
-      watermark = "JP Mishra Digital",
-
-      captions = true,
-
-      music = true
-
-    } = req.body;
-
-    const finalTopic =
-      (prompt || topic || "").trim();
-
-    if (!finalTopic) {
-
-      return res.status(400).json({
-
-        success: false,
-
-        error:
-          "कृपया रील का विषय लिखें।"
-
-      });
-
-    }
-
-    const userId =
-      req.body.userId || "demo-user";
-
-    const user = createUser(userId);
-
-    // Reel generation cost
-    const COST = 10;
-
-    if (user.points < COST) {
-
-      return res.status(402).json({
-
-        success: false,
-
-        error:
-          "पर्याप्त Points नहीं हैं।",
-
-        points: user.points,
-
-        required: COST
-
-      });
-
-    }
-
-    user.points -= COST;
-
-    user.totalCreated += 1;
-
-    console.log("🎬 Reel Request");
-    console.log("User:", userId);
-    console.log("Topic:", finalTopic);
-    console.log("Language:", language);
-    console.log("Voice:", voice);
-    console.log("Aspect:", aspect_ratio);
-    console.log("Duration:", duration);
-
-    // =================================================
-    // DEMO SCRIPT
-    // =================================================
-
-    const script = `
-
-नमस्कार दोस्तों! 🙏
-
-आज हम बात करेंगे —
-${finalTopic}
-
-इस विषय को आसान,
-रोचक और उपयोगी तरीके से समझिए।
-
-अगर आपको यह Reel पसंद आए
-तो Like करें,
-Follow करें
-और अपने दोस्तों के साथ Share करें।
-
-धन्यवाद! ❤️
-
-JP Mishra Digital
-
-`;
-
-    // =================================================
-    // DEMO VIDEO
-    // =================================================
-    // Real AI engine आने पर यही URL replace होगा.
-
-    const video_url =
-      "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
-
-    res.json({
-
-      success: true,
-
-      mode: "text-to-reel",
-
-      title: finalTopic,
-
-      script: script.trim(),
-
-      video_url,
-
-      language,
-
-      voice,
-
-      aspect_ratio,
-
-      duration,
-
-      category,
-
-      captions,
-
-      music,
-
-      watermark:
-        watermark || BRAND.watermark,
-
-      pointsUsed: COST,
-
-      remainingPoints:
-        user.points,
-
-      creator:
-        BRAND.creator,
-
-      share: {
-
-        whatsapp:
-          `https://wa.me/?text=${encodeURIComponent(
-            "देखिए मेरी Reel — ReelMitra.Ai • JP Mishra Digital"
-          )}`,
-
-        facebook:
-          "https://www.facebook.com/sharer/sharer.php?u=" +
-          encodeURIComponent(video_url),
-
-        telegram:
-          "https://t.me/share/url?url=" +
-          encodeURIComponent(video_url),
-
-        copyLink:
-          video_url
-
-      },
-
-      message:
-        "🎉 Demo Reel तैयार है!"
-
-    });
-
-  } catch (error) {
-
-    console.error(
-      "❌ Generate Error:",
-      error
-    );
-
-    res.status(500).json({
-
-      success: false,
-
-      error:
-        "रील तैयार करते समय सर्वर में समस्या हुई।"
-
-    });
-
-  }
-
-});
-
-// =====================================================
-// PHOTO → VIDEO
-// =====================================================
-// Frontend Base64 photo भेज सकता है.
-// अभी demo pipeline है.
-// बाद में AI video engine इसी endpoint से जुड़ेगा.
-// =====================================================
-
-app.post("/api/photo-to-video", async (req, res) => {
-
-  try {
-
-    const {
-
-      userId = "demo-user",
-
-      image,
-
-      prompt = "इस फोटो को cinematic short reel में animate करें",
-
-      language = "Hindi",
-
-      voice = "hi-IN-MadhurNeural",
-
-      duration = 15,
-
-      aspect_ratio = "9:16",
-
-      motion = "cinematic",
-
-      captions = true,
-
-      music = true
-
-    } = req.body;
-
-    if (!image) {
-
-      return res.status(400).json({
-
-        success: false,
-
-        error:
-          "कृपया Photo upload करें।"
-
-      });
-
-    }
-
-    const user = createUser(userId);
-
-    const COST = 20;
-
-    if (user.points < COST) {
-
-      return res.status(402).json({
-
-        success: false,
-
-        error:
-          "Photo → Video के लिए 20 Points चाहिए।",
-
-        points: user.points
-
-      });
-
-    }
-
-    user.points -= COST;
-
-    user.totalCreated += 1;
-
-    console.log("📸 Photo → Video Request");
-
-    console.log("User:", userId);
-
-    console.log("Prompt:", prompt);
-
-    console.log("Motion:", motion);
-
-    // =================================================
-    // IMPORTANT
-    // अभी वास्तविक AI video engine नहीं लगाया गया है.
-    // =================================================
-
-    const video_url =
-      "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
-
-    res.json({
-
-      success: true,
-
-      mode: "photo-to-video",
-
-      photoReceived: true,
-
-      title: "JP Mishra Photo Reel",
-
-      video_url,
-
-      prompt,
-
-      language,
-
-      voice,
-
-      duration,
-
-      aspect_ratio,
-
-      motion,
-
-      captions,
-
-      music,
-
-      watermark:
-        BRAND.watermark,
-
-      pointsUsed: COST,
-
-      remainingPoints:
-        user.points,
-
-      creator:
-        BRAND.creator,
-
-      message:
-        "📸 Photo received! Demo video returned. Real AI animation engine next."
-
-    });
-
-  } catch (error) {
-
-    console.error(
-      "❌ Photo Video Error:",
-      error
-    );
-
-    res.status(500).json({
-
-      success: false,
-
-      error:
-        "Photo processing में समस्या हुई।"
-
-    });
-
-  }
-
-});
-
-// =====================================================
-// ADVANCED FEATURES
-// =====================================================
-
-app.get("/api/features", (req, res) => {
-
-  res.json({
-
-    success: true,
-
-    features: [
-
-      {
-        id: "photo-video",
-        name: "📸 Photo → Video",
-        cost: 20
-      },
-
-      {
-        id: "text-reel",
-        name: "✍️ Text → Reel",
-        cost: 10
-      },
-
-      {
-        id: "ai-script",
-        name: "🧠 AI Script"
-      },
-
-      {
-        id: "ai-voice",
-        name: "🎙️ AI Voice"
-      },
-
-      {
-        id: "captions",
-        name: "📝 Auto Captions"
-      },
-
-      {
-        id: "music",
-        name: "🎵 Background Music"
-      },
-
-      {
-        id: "templates",
-        name: "🎨 Premium Templates"
-      },
-
-      {
-        id: "9x16",
-        name: "📱 9:16 Shorts/Reels"
-      },
-
-      {
-        id: "watermark",
-        name: "🏷️ Custom Watermark"
-      },
-
-      {
-        id: "social",
-        name: "📤 Social Sharing"
-      },
-
-      {
-        id: "whatsapp",
-        name: "💬 WhatsApp Sharing"
-      },
-
-      {
-        id: "referral",
-        name: "🎁 Referral Rewards"
-      }
-
-    ]
-
-  });
-
-});
-
-// =====================================================
-// SOCIAL SHARE
-// =====================================================
-
-app.post("/api/share", (req, res) => {
-
-  const {
-
-    platform = "whatsapp",
-
-    url = "https://jpmtop1.github.io/ReelMitra.Ai/"
-
-  } = req.body;
-
-  const encoded =
-    encodeURIComponent(url);
-
-  let shareUrl = "";
-
-  if (platform === "whatsapp") {
-
-    shareUrl =
-      "https://wa.me/?text=" +
-      encodeURIComponent(
-        "🎬 मेरी Reel देखें — ReelMitra.Ai • JP Mishra Digital\n" +
-        url
-      );
-
-  } else if (platform === "facebook") {
-
-    shareUrl =
-      "https://www.facebook.com/sharer/sharer.php?u=" +
-      encoded;
-
-  } else if (platform === "telegram") {
-
-    shareUrl =
-      "https://t.me/share/url?url=" +
-      encoded;
-
-  } else if (platform === "x") {
-
-    shareUrl =
-      "https://twitter.com/intent/tweet?url=" +
-      encoded;
-
-  } else {
-
-    shareUrl = url;
-
-  }
-
-  res.json({
-
-    success: true,
-
-    platform,
-
-    shareUrl
-
-  });
-
-});
-
-// =====================================================
-// REFERRAL SHARE LINK
-// =====================================================
-
-app.get("/api/referral", (req, res) => {
-
-  const user =
-    createUser(
-      req.query.userId || "demo-user"
-    );
-
-  const appUrl =
-    "https://jpmtop1.github.io/ReelMitra.Ai/";
-
-  const referralLink =
-    `${appUrl}?ref=${user.referralCode}`;
-
-  res.json({
-
-    success: true,
-
-    referralCode:
-      user.referralCode,
-
-    referralLink,
-
-    reward:
-      "दोस्त को जोड़ने पर 25 Points"
-
-  });
-
-});
-
-// =====================================================
-// SERVER
-// =====================================================
-
-app.listen(PORT, () => {
-
-  console.log(
-    `🚀 ReelMitra.Ai Pro Server running on port ${PORT}`
-  );
-
-  console.log(
-    `💳 UPI: ${BRAND.upiId}`
-  );
-
-  console.log(
-    `👨‍💻 Creator: ${BRAND.creator}`
-  );
-
-});
+<!DOCTYPE html>
+<html lang="hi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReelMitra.Ai Pro - JP Mishra Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-between font-sans pb-10">
+
+    <!-- Header -->
+    <header class="w-full max-w-md p-4 flex justify-between items-center border-b border-slate-800">
+        <div class="flex items-center space-x-2">
+            <div class="bg-gradient-to-r from-purple-600 to-pink-500 p-2.5 rounded-xl shadow-lg">
+                <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">ReelMitra.Ai Pro</h1>
+                <p class="text-[10px] text-slate-400">JP Mishra Digital Studio</p>
+            </div>
+        </div>
+        <div onclick="openRechargeModal()" class="cursor-pointer bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-full flex items-center space-x-1.5 shadow-md">
+            <span class="text-amber-400 font-bold text-xs">🪙 <span id="userPoints">150</span> Pts</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-md p-4 flex flex-col space-y-4">
+        
+        <!-- Tabs -->
+        <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
+            <button onclick="switchTab('text')" id="tabText" class="flex-1 py-2 text-xs font-bold rounded-lg bg-purple-600 text-white transition">✍️ Text to Reel</button>
+            <button onclick="switchTab('photo')" id="tabPhoto" class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition">📸 Photo to Video</button>
+        </div>
+
+        <!-- Text to Reel Form -->
+        <div id="sectionText" class="bg-slate-900/80 backdrop-blur border border-slate-800 p-5 rounded-2xl shadow-xl space-y-4">
+            <h2 class="text-sm font-semibold text-purple-300">✍️ टेक्स्ट से वायरल AI रील बनाएँ</h2>
+            <form id="reelForm" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">रील का टॉपिक या प्रॉम्प्ट</label>
+                    <textarea id="promptInput" rows="3" required placeholder="उदा: हनुमान जी के 12 नाम, मोटिवेशनल विचार..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">वॉइस भाषा</label>
+                        <select id="voiceSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none">
+                            <option value="hi-IN-MadhurNeural">हिंदी (पुरुष - Madhur)</option>
+                            <option value="hi-IN-SwaraNeural">हिंदी (महिला - Swara)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">फ़ॉर्मेट (Aspect)</label>
+                        <select id="aspectSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none">
+                            <option value="9:16">9:16 (Shorts/Reels)</option>
+                            <option value="1:1">1:1 (Square Post)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Generate AI Reel (10 Pts)</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Photo to Video Form -->
+        <div id="sectionPhoto" class="bg-slate-900/80 backdrop-blur border border-slate-800 p-5 rounded-2xl shadow-xl space-y-4 hidden">
+            <h2 class="text-sm font-semibold text-pink-400">📸 फोटो से सिनेमैटिक वीडियो बनाएँ</h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">अपनी फोटो अपलोड करें</label>
+                    <input type="file" id="photoFile" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">एनीमेशन प्रॉम्प्ट</label>
+                    <input type="text" id="photoPrompt" placeholder="उदा: Cinematic 3D motion effect..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-pink-500">
+                </div>
+                <button onclick="handlePhotoToVideo()" id="photoSubmitBtn" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 py-3 rounded-xl font-bold text-sm shadow-lg">
+                    ✨ Animate Photo to Video (20 Pts)
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Box -->
+        <div id="loadingBox" class="hidden text-center space-y-3 py-6 bg-slate-900/50 rounded-2xl border border-slate-800">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
+            <p id="loadingStatus" class="text-xs text-slate-300 animate-pulse">AI स्क्रिप्ट और वीडियो तैयार हो रहा है...</p>
+        </div>
+
+        <!-- Result Section -->
+        <div id="resultBox" class="hidden bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-4 shadow-xl">
+            <div class="flex items-center justify-between text-green-400 text-xs font-semibold">
+                <span><i class="fa-solid fa-circle-check mr-1"></i> रील सफलतापूर्वक तैयार हो गई!</span>
+            </div>
+            
+            <div class="relative w-full aspect-[9/16] max-h-[350px] bg-black rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                <video id="videoPreview" controls class="w-full h-full object-cover"></video>
+            </div>
+
+            <!-- Action & Sharing Buttons -->
+            <div class="grid grid-cols-2 gap-2">
+                <a id="downloadBtn" href="#" download="reelmitra_ai.mp4" class="bg-emerald-600 hover:bg-emerald-500 py-2.5 px-3 rounded-xl text-xs font-bold text-center flex items-center justify-center space-x-1.5 shadow">
+                    <i class="fa-solid fa-download"></i>
+                    <span>डाउनलोड करें</span>
+                </a>
+                <button onclick="shareWhatsApp()" class="bg-green-600 hover:bg-green-500 py-2.5 px-3 rounded-xl text-xs font-bold text-center flex items-center justify-center space-x-1.5 shadow">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>WhatsApp शेयर</span>
+                </button>
+            </div>
+
+            <!-- Social Links Connectivity -->
+            <div class="pt-2 border-t border-slate-800 flex justify-between gap-2">
+                <a href="https://studio.youtube.com" target="_blank" class="flex-1 bg-red-600/20 border border-red-500/30 text-red-400 py-2 rounded-lg text-[11px] font-bold text-center flex items-center justify-center gap-1">
+                    <i class="fa-brands fa-youtube"></i> YT Studio
+                </a>
+                <a href="https://www.facebook.com" target="_blank" class="flex-1 bg-blue-600/20 border border-blue-500/30 text-blue-400 py-2 rounded-lg text-[11px] font-bold text-center flex items-center justify-center gap-1">
+                    <i class="fa-brands fa-facebook"></i> Facebook
+                </a>
+                <a href="https://www.instagram.com" target="_blank" class="flex-1 bg-pink-600/20 border border-pink-500/30 text-pink-400 py-2 rounded-lg text-[11px] font-bold text-center flex items-center justify-center gap-1">
+                    <i class="fa-brands fa-instagram"></i> Insta
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Recharge Modal -->
+    <div id="rechargeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-sm text-purple-300">⚡ पॉइंट्स रिचार्ज प्लान</h3>
+                <button onclick="closeRechargeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2.5">
+                <div onclick="selectPack(19, 100)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
+                    <div class="text-base font-extrabold text-purple-400">₹19</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">100 Points</div>
+                </div>
+                <div onclick="selectPack(49, 300)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
+                    <div class="text-base font-extrabold text-purple-400">₹49</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">300 Points</div>
+                </div>
+                <div onclick="selectPack(99, 700)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
+                    <div class="text-base font-extrabold text-purple-400">₹99</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">700 Points</div>
+                </div>
+                <div onclick="selectPack(149, 1100)" class="bg-slate-950 border border-slate-800 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center">
+                    <div class="text-base font-extrabold text-purple-400">₹149</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">1100 Points</div>
+                </div>
+                <div onclick="selectPack(199, 1500)" class="col-span-2 bg-slate-950 border border-purple-500/50 hover:border-purple-500 p-3 rounded-xl cursor-pointer text-center bg-purple-950/20">
+                    <div class="text-base font-extrabold text-pink-400">₹199 (Ultimate Creator Pack)</div>
+                    <div class="text-[10px] text-amber-400 mt-0.5">1500 Points + VIP Badge</div>
+                </div>
+            </div>
+
+            <div id="upiPaymentBox" class="hidden text-center space-y-3 pt-2 border-t border-slate-800">
+                <p id="upiInfoText" class="text-xs font-semibold text-slate-300"></p>
+                <a id="upiPayLink" href="#" class="block bg-purple-600 hover:bg-purple-500 text-white py-2.5 rounded-xl font-bold text-xs">UPI App से भुगतान करें</a>
+                <button onclick="confirmPayment()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2 rounded-xl text-xs font-bold text-white">मैंने भुगतान कर दिया है (पॉइंट्स जोड़ें)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-[10px] text-slate-500 mt-6">
+        © 2026 ReelMitra.Ai Pro • Developed with ❤️ by JP Mishra Digital
+    </footer>
+
+    <script>
+        let currentPoints = parseInt(localStorage.getItem('jp_points')) || 150;
+        let pendingPointsToAdd = 0;
+        document.getElementById('userPoints').innerText = currentPoints;
+
+        function updatePoints(pts) {
+            currentPoints = pts;
+            document.getElementById('userPoints').innerText = currentPoints;
+            localStorage.setItem('jp_points', currentPoints);
+        }
+
+        function switchTab(type) {
+            if(type === 'text') {
+                document.getElementById('sectionText').classList.remove('hidden');
+                document.getElementById('sectionPhoto').classList.add('hidden');
+                document.getElementById('tabText').className = "flex-1 py-2 text-xs font-bold rounded-lg bg-purple-600 text-white transition";
+                document.getElementById('tabPhoto').className = "flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition";
+            } else {
+                document.getElementById('sectionPhoto').classList.remove('hidden');
+                document.getElementById('sectionText').classList.add('hidden');
+                document.getElementById('tabPhoto').className = "flex-1 py-2 text-xs font-bold rounded-lg bg-pink-600 text-white transition";
+                document.getElementById('tabText').className = "flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 transition";
+            }
+        }
+
+        document.getElementById('reelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(currentPoints < 10) {
+                alert("पॉइंट्स खत्म हो गए हैं! कृपया रिचार्ज करें।");
+                openRechargeModal();
+                return;
+            }
+            updatePoints(currentPoints - 10);
+            processGeneration("🎬 AI स्क्रिप्ट और वॉयसओवर तैयार हो रहा है...");
+        });
+
+        function handlePhotoToVideo() {
+            const fileInput = document.getElementById('photoFile');
+            if(fileInput.files.length === 0) {
+                alert("कृपया पहले अपनी फोटो चुनें!");
+                return;
+            }
+            if(currentPoints < 20) {
+                alert("Photo-to-Video के लिए 20 पॉइंट्स चाहिए। कृपया रिचार्ज करें।");
+                openRechargeModal();
+                return;
+            }
+            updatePoints(currentPoints - 20);
+            processGeneration("📸 फोटो को सिनेमैटिक AI वीडियो में बदला जा रहा है...");
+        }
+
+        function processGeneration(statusText) {
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('loadingStatus').innerText = statusText;
+
+            setTimeout(() => {
+                document.getElementById('loadingBox').classList.add('hidden');
+                const videoEl = document.getElementById('videoPreview');
+                videoEl.src = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+                videoEl.load();
+                document.getElementById('resultBox').classList.remove('hidden');
+                videoEl.play().catch(e => console.log("Autoplay restricted"));
+            }, 2500);
+        }
+
+        function shareWhatsApp() {
+            const text = "🎬 मैंने ReelMitra.Ai Pro (JP Mishra Digital) से यह शानदार AI रील बनाई है! आप भी बनाएं:";
+            window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + window.location.href)}`, '_blank');
+        }
+
+        function openRechargeModal() {
+            document.getElementById('rechargeModal').classList.remove('hidden');
+            document.getElementById('upiPaymentBox').classList.add('hidden');
+        }
+
+        function closeRechargeModal() {
+            document.getElementById('rechargeModal').classList.add('hidden');
+        }
+
+        function selectPack(amount, points) {
+            pendingPointsToAdd = points;
+            const upiId = "jpm786064-1@okhdfcbank";
+            const upiUrl = `upi://pay?pa=${upiId}&pn=JP%20Mishra&am=${amount}&cu=INR&tn=ReelMitra%20${points}%20Points`;
+            
+            document.getElementById('upiInfoText').innerText = `₹${amount} भुगतान करने के लिए क्लिक करें (${points} पॉइंट्स मिलेंगे)`;
+            document.getElementById('upiPayLink').href = upiUrl;
+            document.getElementById('upiPaymentBox').classList.remove('hidden');
+        }
+
+        function confirmPayment() {
+            updatePoints(currentPoints + pendingPointsToAdd);
+            alert(`🎉 भुगतान सफल! ${pendingPointsToAdd} पॉइंट्स आपके खाते में जोड़ दिए गए हैं।`);
+            closeRechargeModal();
+        }
+    </script>
+</body>
+</html>
