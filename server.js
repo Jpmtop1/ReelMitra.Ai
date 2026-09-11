@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelMitra.AI Pro - Long Video & Voice Studio</title>
+    <title>ReelMitra.AI Pro - Long Video Studio</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -14,7 +14,6 @@
             --text-muted: #94a3b8;
             --accent: #10b981;
             --whatsapp: #25d366;
-            --gold: #f59e0b;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 12px; }
@@ -25,7 +24,7 @@
         .logo-text h1 { font-size: 15px; font-weight: bold; background: linear-gradient(to right, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo-text p { font-size: 10px; color: var(--text-muted); }
 
-        .coin-badge { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent); padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; color: var(--accent); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .coin-badge { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent); padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; color: var(--accent); display: flex; align-items: center; gap: 5px; }
 
         .container { width: 100%; max-width: 480px; background: var(--card-bg); padding: 18px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); margin-bottom: 15px; border: 1px solid #1f2937; }
         
@@ -49,10 +48,9 @@
 
         #resultSection { display: none; margin-top: 15px; text-align: center; }
         
-        .preview-container { position: relative; width: 100%; max-height: 480px; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; border: 2px solid #374151; display: flex; align-items: center; justify-content: center; }
+        .preview-container { position: relative; width: 100%; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; border: 2px solid #374151; display: flex; align-items: center; justify-content: center; }
         
-        #outputImage { width: 100%; height: 100%; object-fit: cover; display: none; }
-        #outputVideo { width: 100%; height: 100%; object-fit: cover; }
+        #outputImage { width: 100%; height: 100%; object-fit: cover; }
         
         .video-text-overlay {
             position: absolute;
@@ -72,7 +70,25 @@
             line-height: 1.4;
         }
 
-        .watermark-overlay { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: white; z-index: 5; }
+        .watermark-overlay { position: absolute; bottom: 35px; left: 12px; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: white; z-index: 5; }
+
+        /* असली कस्टम वीडियो प्लेयर बार */
+        .custom-player-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+        .play-pause-btn { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+        .time-display { font-size: 11px; color: #fff; min-width: 65px; text-align: center; }
+        .progress-bar-container { flex: 1; height: 5px; background: #374151; border-radius: 3px; position: relative; cursor: pointer; }
+        .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 3px; transition: width 0.1s linear; }
 
         .action-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
         .action-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 12px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none;}
@@ -96,57 +112,59 @@
                 <p>JP Mishra Digital Studio</p>
             </div>
         </div>
-        <div class="coin-badge">🪙 <span id="coinCount">110</span> Pts</div>
+        <div class="coin-badge">🪙 <span id="coinCount">100</span> Pts</div>
     </div>
 
-    <!-- मुख्य स्टूडियो पैनल -->
     <div class="container">
-        <h2>1 से 3 मिनट AI वीडियो & वॉइस स्टूडियो</h2>
-        <p class="subtitle">फोटो अपलोड करें, लंबी स्क्रिप्ट लिखें और पूरी आवाज़ के साथ वीडियो बनाएं!</p>
+        <h2>लंबी AI वीडियो और वॉइस स्टूडियो (60 से 180 सेकंड)</h2>
+        <p class="subtitle">अपनी फोटो और लंबी स्क्रिप्ट डालें, पूरी अवधि तक चलने वाली रील बनाएं!</p>
 
-        <!-- 1. फोटो अपलोड सेक्शन -->
         <div class="form-group">
-            <label>📸 अपनी फोटो या पोस्टर अपलोड करें</label>
+            <label>📸 अपनी फोटो या पोस्टर चुनें</label>
             <div class="file-upload-box" onclick="document.getElementById('userPhotoFile').click()">
-                <span id="fileNameDisplay" style="font-size: 12px; color: var(--text-muted);">📁 यहाँ क्लिक करके फोटो चुनें...</span>
+                <span id="fileNameDisplay" style="font-size: 12px; color: var(--text-muted);">📁 यहाँ क्लिक करके फोटो अपलोड करें...</span>
                 <input type="file" id="userPhotoFile" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
             </div>
         </div>
 
-        <!-- 2. टेक्स्ट स्क्रिप्ट सेक्शन (1 से 3 मिनट के लिए लंबी कहानी) -->
         <div class="form-group">
-            <label>✍️ लंबी स्क्रिप्ट या टॉपिक लिखें (1-3 मिनट के लिए)</label>
-            <textarea id="reelTopic" placeholder="यहाँ हनुमान जी के 12 नाम या अपनी पूरी कविता/स्टोरी विस्तार से लिखें..."></textarea>
+            <label>✍️ लंबी स्क्रिप्ट या कहानी लिखें (1 से 3 मिनट)</label>
+            <textarea id="reelTopic" placeholder="यहाँ अपनी पूरी कविता या लंबा टॉपिक विस्तार से लिखें..."></textarea>
         </div>
 
         <div class="form-group">
-            <label>🎙️ वॉइस भाषा और आवाज़</label>
+            <label>🎙️ वॉइस भाषा चुनें</label>
             <select id="voiceStyle">
-                <option value="hi-IN">हिंदी (Natural Pro Voice - Madhur)</option>
+                <option value="hi-IN">हिंदी (Pro AI Voice)</option>
                 <option value="en-US">English (Pro AI Voice)</option>
             </select>
         </div>
 
-        <button class="btn" onclick="generateLongAiReel()">✨ Generate 1-3 Min Video & Voice (10 Pts)</button>
+        <button class="btn" onclick="generateLongVideoReel()">✨ Generate Long Video & Voice (10 Pts)</button>
 
         <div id="loader">
             <div class="spinner"></div>
-            <p id="loaderText" style="font-size: 12px; color: var(--text-muted);">लंबी स्क्रिप्ट और एचडी वॉइस तैयार हो रही है...</p>
+            <p id="loaderText" style="font-size: 12px; color: var(--text-muted);">लंबी वीडियो और एचडी वॉइस तैयार हो रही है...</p>
         </div>
 
-        <!-- रिजल्ट सेक्शन -->
         <div id="resultSection">
-            <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;">✅ आपकी 1-3 मिनट की रील तैयार है!</p>
+            <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;">✅ आपकी लंबी वीडियो सफलतापूर्वक तैयार हो गई!</p>
             
             <div class="preview-container">
                 <div id="videoCaption" class="video-text-overlay">आपका टेक्स्ट यहाँ चलेगा</div>
                 
-                <img id="outputImage" alt="Uploaded Preview">
-                <video id="outputVideo" controls autoplay loop style="display: none;">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                </video>
+                <img id="outputImage" src="" alt="AI Video Frame">
                 
                 <div class="watermark-overlay">⚡ ReelMitra.AI | JP Mishra</div>
+
+                <!-- कस्टम वीडियो प्लेयर कंट्रोल्स जो पूरे 60-90 सेकंड चलेंगे -->
+                <div class="custom-player-controls">
+                    <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸️</button>
+                    <div class="time-display" id="timeDisplay">0:00 / 1:00</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="action-buttons">
@@ -155,10 +173,9 @@
             </div>
         </div>
 
-        <!-- रिफरल प्रोग्राम बॉक्स -->
         <div class="referral-box">
-            <p>🤝 <b>रिफरल प्रोग्राम:</b> दोस्तों को लिंक शेयर करें और हर जॉइनिंग पर पाएं <b>20 फ्री पॉइंट्स!</b></p>
-            <button class="btn" style="padding: 8px; font-size: 12px;" onclick="shareReferralLink()">🔗 रिफरल लिंक कॉपी करें (+20 Pts)</button>
+            <p>🤝 <b>रिफरल प्रोग्राम:</b> दोस्तों को लिंक शेयर करें और पाएं <b>20 फ्री पॉइंट्स!</b></p>
+            <button class="btn" style="padding: 8px; font-size: 12px;" onclick="shareReferralLink()">🔗 रिफरल लिंक कॉपी करें</button>
         </div>
     </div>
 
@@ -167,13 +184,13 @@
     </div>
 
     <script>
-        let userCredits = 110;
-        let uploadedImageSrc = null;
-        let speechSynthTimer = null;
-
-        function updateCreditsDisplay() {
-            document.getElementById('coinCount').innerText = userCredits;
-        }
+        let userCredits = 100;
+        let uploadedImageSrc = "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60"; // डिफ़ॉल्ट इमेज
+        let playbackTimer = null;
+        let currentSeconds = 0;
+        let totalDuration = 60; // 60 सेकंड की लंबी वीडियो
+        let isPlaying = false;
+        let speechUtterance = null;
 
         function handlePhotoUpload(event) {
             const file = event.target.files[0];
@@ -187,12 +204,12 @@
             }
         }
 
-        function generateLongAiReel() {
+        function generateLongVideoReel() {
             const topic = document.getElementById('reelTopic').value.trim();
             const lang = document.getElementById('voiceStyle').value;
 
             if (!topic) {
-                alert('कृपया टेक्स्ट बॉक्स में लंबी कहानी या टॉपिक लिखें!');
+                alert('कृपया टेक्स्ट बॉक्स में कुछ टॉपिक या कहानी लिखें!');
                 return;
             }
 
@@ -202,78 +219,107 @@
             }
 
             userCredits -= 10;
-            updateCreditsDisplay();
+            document.getElementById('coinCount').innerText = userCredits;
 
             document.getElementById('loader').style.display = 'block';
             document.getElementById('resultSection').style.display = 'none';
 
-            // पुरानी आवाज़ बंद करें
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
-            if (speechSynthTimer) {
-                clearInterval(speechSynthTimer);
-            }
+            // पुराना वॉयस और टाइटैनिक टाइमर रोकें
+            window.speechSynthesis.cancel();
+            if (playbackTimer) clearInterval(playbackTimer);
 
             let progress = 0;
             let loaderText = document.getElementById('loaderText');
 
-            const interval = setInterval(() => {
-                progress += 33;
-                if (progress === 33) loaderText.innerText = '📸 फोटो और वीडियो फ्रेम तैयार हो रहे हैं...';
-                if (progress === 66) loaderText.innerText = '🎙️ 1 से 3 मिनट का AI वॉइसओवर सिंक हो रहा है...';
+            const loadInterval = setInterval(() => {
+                progress += 34;
+                if (progress === 34) loaderText.innerText = '📸 फोटो फ्रेम और लेआउट सेट हो रहा है...';
+                if (progress === 68) loaderText.innerText = '🎙️ 60 सेकंड का AI वॉइसओवर तैयार हो रहा है...';
                 
-                if (progress >= 99) {
-                    clearInterval(interval);
+                if (progress >= 100) {
+                    clearInterval(loadInterval);
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('resultSection').style.display = 'block';
                     
                     document.getElementById('videoCaption').innerText = topic;
+                    document.getElementById('outputImage').src = uploadedImageSrc;
 
-                    // फोटो या वीडियो शो करना
-                    if (uploadedImageSrc) {
-                        document.getElementById('outputImage').src = uploadedImageSrc;
-                        document.getElementById('outputImage').style.display = 'block';
-                        document.getElementById('outputVideo').style.display = 'none';
-                    } else {
-                        document.getElementById('outputImage').style.display = 'none';
-                        document.getElementById('outputVideo').style.display = 'block';
-                        const vElem = document.getElementById('outputVideo');
-                        vElem.currentTime = 0;
-                        vElem.play();
-                    }
-
-                    // 1 से 3 मिनट तक आवाज़ को लगातार और स्पष्ट रूप से बोलने के लिए लूपिंग वॉइस इंजन
-                    if ('speechSynthesis' in window) {
-                        const speakText = () => {
-                            const utterance = new SpeechSynthesisUtterance(topic);
-                            utterance.lang = lang;
-                            utterance.rate = 0.90; // धीमी और स्पष्ट आवाज़ ताकि लंबी चले
-                            window.speechSynthesis.speak(utterance);
-                        };
-
-                        speakText(); // पहली बार बोलें
-
-                        // अगर टेक्स्ट लंबा है, तो उसे 45 सेकंड बाद दोबारा रिपीट करें ताकि वीडियो लंबी (1-3 मिनट) तक आवाज़ के साथ चले
-                        speechSynthTimer = setInterval(() => {
-                            if (document.getElementById('resultSection').style.display === 'block') {
-                                speakText();
-                            } else {
-                                clearInterval(speechSynthTimer);
-                            }
-                        }, 45000);
-                    }
+                    // वीडियो प्लेबैक शुरू करें
+                    startCustomPlayer(topic, lang);
                 }
             }, 800);
         }
 
+        function startCustomPlayer(text, lang) {
+            currentSeconds = 0;
+            // टेक्स्ट की लंबाई के हिसाब से वीडियो का समय तय करें (कम से कम 60 सेकंड)
+            totalDuration = Math.max(60, text.length * 0.8); 
+            isPlaying = true;
+            document.getElementById('playPauseBtn').innerText = "⏸️";
+
+            // आवाज़ शुरू करें
+            if ('speechSynthesis' in window) {
+                speechUtterance = new SpeechSynthesisUtterance(text);
+                speechUtterance.lang = lang;
+                speechUtterance.rate = 0.9; // स्पष्ट और धीमी गति
+                window.speechSynthesis.speak(speechUtterance);
+            }
+
+            if (playbackTimer) clearInterval(playbackTimer);
+
+            playbackTimer = setInterval(() => {
+                if (isPlaying) {
+                    currentSeconds++;
+                    updatePlayerUI();
+
+                    if (currentSeconds >= totalDuration) {
+                        // लूप करने के लिए वापस शून्य पर भेजें ताकि वीडियो चलती रहे
+                        currentSeconds = 0;
+                        if ('speechSynthesis' in window) {
+                            window.speechSynthesis.cancel();
+                            window.speechSynthesis.speak(speechUtterance);
+                        }
+                    }
+                }
+            }, 1000);
+        }
+
+        function updatePlayerUI() {
+            let m = Math.floor(currentSeconds / 60);
+            let s = currentSeconds % 60;
+            let tm = Math.floor(totalDuration / 60);
+            let ts = Math.floor(totalDuration % 60);
+
+            let timeStr = `${m}:${s < 10 ? '0' : ''}${s} / ${tm}:${ts < 10 ? '0' : ''}${ts}`;
+            document.getElementById('timeDisplay').innerText = timeStr;
+
+            let percent = (currentSeconds / totalDuration) * 100;
+            document.getElementById('progressBarFill').style.width = percent + '%';
+        }
+
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('playPauseBtn');
+            if (isPlaying) {
+                btn.innerText = "⏸️";
+                if ('speechSynthesis' in window && !window.speechSynthesis.speaking) {
+                    window.speechSynthesis.speak(speechUtterance);
+                }
+            } else {
+                btn.innerText = "▶️";
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.pause();
+                }
+            }
+        }
+
         function downloadResult() {
-            alert('📥 वीडियो डाउनलोडिंग शुरू हो गई है!');
+            alert('📥 आपकी लंबी वीडियो रील डाउनलोड हो रही है!');
         }
 
         function shareOnWhatsApp() {
             const topic = document.getElementById('reelTopic').value.trim();
-            const text = encodeURIComponent(`मैंने ReelMitra.AI से अपनी नई 1-3 मिनट की AI रील बनाई: "${topic}"`);
+            const text = encodeURIComponent(`मैंने ReelMitra.AI से अपनी नई लंबी AI रील बनाई: "${topic}"`);
             window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
         }
 
@@ -281,8 +327,8 @@
             const refLink = "https://jpmptop1.github.io/ReelMitra.Ai/?ref=jp_mishra";
             navigator.clipboard.writeText(refLink);
             userCredits += 20;
-            updateCreditsDisplay();
-            alert('📋 रिफरल लिंक कॉपी हो गया है! आपके अकाउंट में 20 फ्री पॉइंट्स जोड़ दिए गए हैं!');
+            document.getElementById('coinCount').innerText = userCredits;
+            alert('📋 रिफरल लिंक कॉपी हो गया! आपके अकाउंट में 20 फ्री पॉइंट्स जोड़ दिए गए हैं!');
         }
     </script>
 </body>
