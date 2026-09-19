@@ -31,7 +31,6 @@
 
         .container { width: 100%; max-width: 450px; background: var(--card-bg); padding: 18px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.08); }
         
-        /* टैब स्विचिंग स्टाइल्स */
         .tab-menu { display: flex; background: #05070a; border-radius: 10px; padding: 4px; margin-bottom: 15px; border: 1px solid #374151; }
         .tab-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; font-weight: bold; color: var(--text-muted); background: none; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
         .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; box-shadow: 0 4px 12px rgba(244,63,94,0.3); }
@@ -60,31 +59,44 @@
 
         #resultSection { display: none; margin-top: 15px; text-align: center; }
         
-        .preview-container { position: relative; width: 100%; aspect-ratio: 9/16; max-height: 520px; background: #000; border-radius: 14px; overflow: hidden; margin-bottom: 12px; border: 2px solid #374151; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .preview-container { 
+            position: relative; 
+            width: 100%; 
+            aspect-ratio: 9/16; 
+            max-height: 520px; 
+            background: #000; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            margin-bottom: 12px; 
+            border: 2px solid #374151; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+        }
         
-        #outputMedia { width: 100%; height: 100%; object-fit: cover; }
+        #outputMedia { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; top: 0; left: 0; z-index: 1; }
         
+        /* टेक्स्ट ओवरले को अब वीडियो के ऊपर साफ़ दिखने के लिए बिल्कुल सेट कर दिया है */
         .video-text-overlay {
             position: absolute;
             top: 15px;
             left: 12px;
             right: 12px;
-            background: rgba(0, 0, 0, 0.82);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             padding: 12px 14px;
             border-radius: 10px;
-            font-size: 13px;
-            color: #fff;
+            font-size: 14px;
+            color: #ffffff;
             text-align: center;
-            border: 1px solid rgba(244, 63, 94, 0.5);
-            font-weight: 600;
-            z-index: 5;
-            line-height: 1.5;
-            max-height: 130px;
+            border: 1.5px solid var(--primary);
+            font-weight: bold;
+            z-index: 10;
+            line-height: 1.4;
+            max-height: 140px;
             overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.9);
         }
 
-        .watermark-overlay { position: absolute; bottom: 15px; right: 12px; background: rgba(0,0,0,0.75); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: white; z-index: 5; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.1); }
+        .watermark-overlay { position: absolute; bottom: 15px; right: 12px; background: rgba(0,0,0,0.75); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: white; z-index: 10; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.1); }
 
         .action-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
         .action-btn { flex: 1; padding: 11px; border-radius: 10px; border: none; font-size: 12px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: 0.3s; }
@@ -116,24 +128,22 @@
                 <p>JP Mishra Digital Studio</p>
             </div>
         </div>
-        <div class="coin-badge">🪙 <span id="coinCount">50</span> Pts</div>
+        <div class="coin-badge">🪙 <span id="coinCount">100</span> Pts</div>
     </div>
 
     <div class="container">
-        <!-- टैब मेनू -->
         <div class="tab-menu">
             <button class="tab-btn active" onclick="switchTab('textTab')">✍️ Text to Reel</button>
             <button class="tab-btn" onclick="switchTab('photoTab')">📸 Photo to Video</button>
         </div>
 
-        <!-- टैब 1: टेक्स्ट से रील -->
         <div id="textTab" class="tab-content active">
             <h2>टेक्स्ट से वायरल AI रील बनाएँ</h2>
             <p class="subtitle">अपनी कविता या कहानी लिखें और तुरंत AI वीडियो बनाएं!</p>
 
             <div class="form-group">
                 <label>reel का टॉपिक या प्रॉम्प्ट</label>
-                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें (जैसे: हनुमान जी के 12 नाम)...">हनुमान जी के 12 नाम</textarea>
+                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें...">गणेश मंत्र</textarea>
             </div>
 
             <div class="form-group">
@@ -152,10 +162,9 @@
                 </select>
             </div>
 
-            <button class="btn" onclick="generateAiReel()">✨ Generate AI Reel (10 Pts)</button>
+            <button class="btn" onclick="generateAiReel()">✨ Generate AI Reel</button>
         </div>
 
-        <!-- टैब 2: फोटो से वीडियो -->
         <div id="photoTab" class="tab-content">
             <h2>फोटो से सिनेमाटिक वीडियो</h2>
             <p class="subtitle">अपनी इमेज अपलोड करें और उस पर टेक्स्ट चलाएं!</p>
@@ -173,16 +182,14 @@
                 <textarea id="photoCaptionText" placeholder="फोटो पर चलने वाला टेक्स्ट यहाँ लिखें..."></textarea>
             </div>
 
-            <button class="btn" onclick="generatePhotoVideo()">🚀 Create Photo Video (10 Pts)</button>
+            <button class="btn" onclick="generatePhotoVideo()">🚀 Create Photo Video</button>
         </div>
 
-        <!-- लोडर -->
         <div id="loader">
             <div class="spinner"></div>
             <p id="loaderText" style="font-size: 12px; color: var(--text-muted);">AI रील रेंडर हो रही है...</p>
         </div>
 
-        <!-- रिजल्ट सेक्शन -->
         <div id="resultSection">
             <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;">✅ रील सफलतापूर्वक तैयार हो गई!</p>
             
@@ -213,11 +220,11 @@
     </div>
 
     <div class="footer">
-        © 2026 ReelMitra.Ai • Created by <span>JP Mishra</span>
+        © 2026 ReelMitra.Ai Pro • Developed by <span>JP Mishra</span>
     </div>
 
     <script>
-        let userCredits = 50;
+        let userCredits = 100;
         let customUploadedImage = "";
 
         function switchTab(tabId) {
@@ -254,14 +261,6 @@
                 return;
             }
 
-            if(userCredits < 10) {
-                alert('आपके पॉइंट्स समाप्त हो गए हैं!');
-                return;
-            }
-
-            userCredits -= 10;
-            document.getElementById('coinCount').innerText = userCredits;
-
             runGenerationProcess(topic, lang, "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4");
         }
 
@@ -271,14 +270,6 @@
                 alert('कृपया फोटो पर दिखाने के लिए टेक्स्ट लिखें!');
                 return;
             }
-
-            if(userCredits < 10) {
-                alert('आपके पॉइंट्स समाप्त हो गए हैं!');
-                return;
-            }
-
-            userCredits -= 10;
-            document.getElementById('coinCount').innerText = userCredits;
 
             let videoSource = customUploadedImage || "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
             runGenerationProcess(caption, "hi-IN", videoSource);
@@ -290,14 +281,18 @@
 
             let loaderText = document.getElementById('loaderText');
             
-            setTimeout(() => { loaderText.innerText = '🎙️ AI वॉइसओवर और स्क्रिप्ट सिंक्रोनाइज हो रही है...'; }, 1200);
-            setTimeout(() => { loaderText.innerText = '🎬 9:16 सिनेमाटिक वीडियो लेआउट तैयार हो रहा है...'; }, 2500);
+            setTimeout(() => { loaderText.innerText = '🎙️ AI वॉइसओवर और स्क्रिप्ट सिंक्रोनाइज हो रही है...'; }, 1000);
+            setTimeout(() => { loaderText.innerText = '🎬 9:16 सिनेमाटिक वीडियो लेआउट तैयार हो रहा है...'; }, 2000);
 
             setTimeout(() => {
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('resultSection').style.display = 'block';
 
-                document.getElementById('videoCaption').innerText = text;
+                document.getElementById('videoCaptioninnerText').innerText = text; // सुरक्षा के लिए
+                const captionBox = document.getElementById('videoCaption');
+                captionBox.innerText = text;
+                captionBox.style.display = 'block';
+
                 const mediaElement = document.getElementById('outputMedia');
                 mediaElement.src = mediaSrc;
                 document.getElementById('downloadBtn').href = mediaSrc;
@@ -310,7 +305,7 @@
                     window.speechSynthesis.speak(utterance);
                 }
 
-            }, 3500);
+            }, 3000);
         }
 
         function shareOnWhatsApp() {
