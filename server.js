@@ -68,35 +68,32 @@
             border-radius: 14px; 
             overflow: hidden; 
             margin-bottom: 12px; 
-            border: 2px solid #374151; 
+            border: 2px solid var(--primary); 
             box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
         }
         
-        #outputMedia { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; top: 0; left: 0; z-index: 1; }
+        #outputMedia { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* टेक्स्ट ओवरले को अब वीडियो के ऊपर साफ़ दिखने के लिए बिल्कुल सेट कर दिया है */
+        /* गारंटीड दिखने वाला टेक्स्ट ओवरले बॉक्स */
         .video-text-overlay {
             position: absolute;
-            top: 15px;
-            left: 12px;
-            right: 12px;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 12px 14px;
-            border-radius: 10px;
-            font-size: 14px;
+            top: 12px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 15px;
             color: #ffffff;
             text-align: center;
-            border: 1.5px solid var(--primary);
+            border: 2px solid var(--primary);
             font-weight: bold;
-            z-index: 10;
-            line-height: 1.4;
-            max-height: 140px;
-            overflow-y: auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.9);
+            z-index: 9999;
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.6);
+            letter-spacing: 0.5px;
         }
 
-        .watermark-overlay { position: absolute; bottom: 15px; right: 12px; background: rgba(0,0,0,0.75); padding: 4px 10px; border-radius: 6px; font-size: 10px; color: white; z-index: 10; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.1); }
+        .watermark-overlay { position: absolute; bottom: 12px; right: 10px; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 6px; font-size: 10px; color: white; z-index: 9999; border: 1px solid rgba(255,255,255,0.2); }
 
         .action-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
         .action-btn { flex: 1; padding: 11px; border-radius: 10px; border: none; font-size: 12px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: 0.3s; }
@@ -143,7 +140,7 @@
 
             <div class="form-group">
                 <label>reel का टॉपिक या प्रॉम्प्ट</label>
-                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें...">गणेश मंत्र</textarea>
+                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें...">गणेश जी का मंत्र</textarea>
             </div>
 
             <div class="form-group">
@@ -162,7 +159,7 @@
                 </select>
             </div>
 
-            <button class="btn" onclick="generateAiReel()">✨ Generate AI Reel</button>
+            <button class="btn" onclick="generateAiReel()">✨ Generate AI Reel (10 Pts)</button>
         </div>
 
         <div id="photoTab" class="tab-content">
@@ -182,7 +179,7 @@
                 <textarea id="photoCaptionText" placeholder="फोटो पर चलने वाला टेक्स्ट यहाँ लिखें..."></textarea>
             </div>
 
-            <button class="btn" onclick="generatePhotoVideo()">🚀 Create Photo Video</button>
+            <button class="btn" onclick="generatePhotoVideo()">🚀 Create Photo Video (10 Pts)</button>
         </div>
 
         <div id="loader">
@@ -194,7 +191,7 @@
             <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;">✅ रील सफलतापूर्वक तैयार हो गई!</p>
             
             <div class="preview-container">
-                <div id="videoCaption" class="video-text-overlay">स्क्रिप्ट यहाँ दिखेगी...</div>
+                <div id="videoCaption" class="video-text-overlay">यहाँ आपका टेक्स्ट दिखेगा</div>
                 <video id="outputMedia" controls autoplay loop playsinline></video>
                 <div class="watermark-overlay">⚡ JP Mishra Digital</div>
             </div>
@@ -261,6 +258,14 @@
                 return;
             }
 
+            if(userCredits < 10) {
+                alert('पॉइंट्स समाप्त हो गए हैं!');
+                return;
+            }
+
+            userCredits -= 10;
+            document.getElementById('coinCount').innerText = userCredits;
+
             runGenerationProcess(topic, lang, "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4");
         }
 
@@ -270,6 +275,14 @@
                 alert('कृपया फोटो पर दिखाने के लिए टेक्स्ट लिखें!');
                 return;
             }
+
+            if(userCredits < 10) {
+                alert('पॉइंट्स समाप्त हो गए हैं!');
+                return;
+            }
+
+            userCredits -= 10;
+            document.getElementById('coinCount').innerText = userCredits;
 
             let videoSource = customUploadedImage || "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
             runGenerationProcess(caption, "hi-IN", videoSource);
@@ -281,14 +294,14 @@
 
             let loaderText = document.getElementById('loaderText');
             
-            setTimeout(() => { loaderText.innerText = '🎙️ AI वॉइसओवर और स्क्रिप्ट सिंक्रोनाइज हो रही है...'; }, 1000);
-            setTimeout(() => { loaderText.innerText = '🎬 9:16 सिनेमाटिक वीडियो लेआउट तैयार हो रहा है...'; }, 2000);
+            setTimeout(() => { loaderText.innerText = '🎙️ AI वॉइसओवर और स्क्रिप्ट तैयार हो रही है...'; }, 1000);
+            setTimeout(() => { loaderText.innerText = '🎬 9:16 वीडियो और टेक्स्ट लेआउट सेट हो रहा है...'; }, 2000);
 
             setTimeout(() => {
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('resultSection').style.display = 'block';
 
-                document.getElementById('videoCaptioninnerText').innerText = text; // सुरक्षा के लिए
+                // टेक्स्ट को तुरंत वीडियो के ऊपर दिखाने के लिए सेट करें
                 const captionBox = document.getElementById('videoCaption');
                 captionBox.innerText = text;
                 captionBox.style.display = 'block';
