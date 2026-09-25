@@ -74,25 +74,26 @@
         
         #outputMedia { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* गारंटीड दिखने वाला टेक्स्ट ओवरले बॉक्स */
+        /* 100% गारंटीड दिखने वाला और सबसे ऊपर रहने वाला टेक्स्ट लेयर */
         .video-text-overlay {
             position: absolute;
-            top: 15px;
-            left: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 10px 12px;
-            border-radius: 8px;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,30,0.95));
+            padding: 12px 15px;
+            border-radius: 10px;
             font-size: 16px;
             color: #ffffff;
             text-align: center;
             border: 2px solid var(--primary);
             font-weight: bold;
-            z-index: 9999;
-            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.8);
+            z-index: 2147483647; /* सबसे उच्चतम लेयर ताकि कभी न छिपे */
+            box-shadow: 0 6px 25px rgba(244, 63, 94, 0.9);
+            letter-spacing: 0.5px;
         }
 
-        .watermark-overlay { position: absolute; bottom: 12px; right: 10px; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 6px; font-size: 10px; color: white; z-index: 9999; border: 1px solid rgba(255,255,255,0.2); }
+        .watermark-overlay { position: absolute; bottom: 15px; right: 12px; background: rgba(0,0,0,0.85); padding: 5px 10px; border-radius: 6px; font-size: 10px; color: white; z-index: 2147483646; border: 1px solid rgba(255,255,255,0.2); }
 
         .action-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
         .action-btn { flex: 1; padding: 11px; border-radius: 10px; border: none; font-size: 12px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: 0.3s; }
@@ -124,7 +125,7 @@
                 <p>JP Mishra Digital Studio</p>
             </div>
         </div>
-        <div class="coin-badge">🪙 <span id="coinCount">110</span> Pts</div>
+        <div class="coin-badge">🪙 <span id="coinCount">100</span> Pts</div>
     </div>
 
     <div class="container">
@@ -139,7 +140,7 @@
 
             <div class="form-group">
                 <label>reel का टॉपिक या प्रॉम्प्ट</label>
-                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें...">हनुमान जी के नाम</textarea>
+                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें...">गणेश जी का मंत्र</textarea>
             </div>
 
             <div class="form-group">
@@ -190,6 +191,7 @@
             <p style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 13px;">✅ रील सफलतापूर्वक तैयार हो गई!</p>
             
             <div class="preview-container">
+                <!-- यह बॉक्स अब वीडियो के सबसे ऊपर हमेशा दिखाई देगा -->
                 <div id="videoCaption" class="video-text-overlay">यहाँ आपका टेक्स्ट दिखेगा</div>
                 <video id="outputMedia" controls autoplay loop playsinline></video>
                 <div class="watermark-overlay">⚡ JP Mishra Digital</div>
@@ -220,7 +222,7 @@
     </div>
 
     <script>
-        let userCredits = 110;
+        let userCredits = 100;
         let customUploadedImage = "";
 
         function switchTab(tabId) {
@@ -300,7 +302,7 @@
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('resultSection').style.display = 'block';
 
-                // टेक्स्ट को वीडियो के ऊपर तुरंत सेट करें
+                // टेक्स्ट को तुरंत वीडियो के ऊपर विजिबल करें
                 const captionBox = document.getElementById('videoCaption');
                 captionBox.innerText = text;
                 captionBox.style.display = 'block';
