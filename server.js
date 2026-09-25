@@ -77,20 +77,19 @@
         /* गारंटीड दिखने वाला टेक्स्ट ओवरले बॉक्स */
         .video-text-overlay {
             position: absolute;
-            top: 12px;
+            top: 15px;
             left: 10px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.85);
             padding: 10px 12px;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 16px;
             color: #ffffff;
             text-align: center;
             border: 2px solid var(--primary);
             font-weight: bold;
             z-index: 9999;
-            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.6);
-            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.8);
         }
 
         .watermark-overlay { position: absolute; bottom: 12px; right: 10px; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 6px; font-size: 10px; color: white; z-index: 9999; border: 1px solid rgba(255,255,255,0.2); }
@@ -125,7 +124,7 @@
                 <p>JP Mishra Digital Studio</p>
             </div>
         </div>
-        <div class="coin-badge">🪙 <span id="coinCount">100</span> Pts</div>
+        <div class="coin-badge">🪙 <span id="coinCount">110</span> Pts</div>
     </div>
 
     <div class="container">
@@ -140,7 +139,7 @@
 
             <div class="form-group">
                 <label>reel का टॉपिक या प्रॉम्प्ट</label>
-                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें...">गणेश जी का मंत्र</textarea>
+                <textarea id="reelTopic" placeholder="यहाँ अपनी स्क्रिप्ट लिखें...">हनुमान जी के नाम</textarea>
             </div>
 
             <div class="form-group">
@@ -221,7 +220,7 @@
     </div>
 
     <script>
-        let userCredits = 100;
+        let userCredits = 110;
         let customUploadedImage = "";
 
         function switchTab(tabId) {
@@ -301,7 +300,7 @@
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('resultSection').style.display = 'block';
 
-                // टेक्स्ट को तुरंत वीडियो के ऊपर दिखाने के लिए सेट करें
+                // टेक्स्ट को वीडियो के ऊपर तुरंत सेट करें
                 const captionBox = document.getElementById('videoCaption');
                 captionBox.innerText = text;
                 captionBox.style.display = 'block';
